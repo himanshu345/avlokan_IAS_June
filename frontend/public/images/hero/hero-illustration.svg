@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Books -->
+  <rect x="100" y="200" width="200" height="300" rx="10" fill="#E2E8F0"/>
+  <rect x="320" y="150" width="200" height="350" rx="10" fill="#CBD5E1"/>
+  <rect x="540" y="250" width="200" height="250" rx="10" fill="#94A3B8"/>
+  
+  <!-- Person -->
+  <circle cx="400" cy="300" r="80" fill="#F3F4F6"/>
+  <circle cx="400" cy="250" r="40" fill="#F3F4F6"/>
+  
+  <!-- Pencil -->
+  <rect x="500" y="200" width="20" height="200" transform="rotate(45 500 200)" fill="#8B5CF6"/>
+  <polygon points="520,200 540,180 560,200" fill="#7C3AED"/>
+  
+  <!-- Notebook -->
+  <rect x="300" y="350" width="200" height="150" rx="5" fill="white" stroke="#CBD5E1" stroke-width="2"/>
+  <line x1="320" y1="380" x2="480" y2="380" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="320" y1="410" x2="480" y2="410" stroke="#CBD5E1" stroke-width="1"/>
+  <line x1="320" y1="440" x2="480" y2="440" stroke="#CBD5E1" stroke-width="1"/>
+</svg> 
