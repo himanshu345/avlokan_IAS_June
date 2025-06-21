@@ -103,3 +103,7 @@ The backend API will be available at http://localhost:5000.
 ## License
 
 This project is licensed under the MIT License. # avlokan_IAS_June
+
+
+## Push on Github
+- git add . && git commit -m "Your commit message" && git push

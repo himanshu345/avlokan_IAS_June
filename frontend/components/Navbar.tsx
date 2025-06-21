@@ -164,7 +164,7 @@ export default function Navbar({ user }: NavbarProps) {
                     </button>
                   </div>
                 ) : (
-                  <Link href="/login" className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                  <Link href="/login" className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-300">
                     Login
                   </Link>
                 )}
