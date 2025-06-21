@@ -26,18 +26,35 @@ const submitAnswer = async (req, res) => {
       });
     }
 
-    // Check if user has available evaluations
+    // Check if user has available evaluations or allow 2 free uploads
     const user = await User.findById(req.user._id).populate('subscriptionPlan');
-    
     if (!user.subscriptionPlan) {
-      return res.status(400).json({
-        success: false,
-        message: 'You need an active subscription plan to submit answers'
-      });
+      // Count user's total submissions
+      const freeUploads = await Answer.countDocuments({ user: req.user._id });
+      if (freeUploads >= 2) {
+        return res.status(400).json({
+          success: false,
+          message: 'You have used your 2 free uploads. Please subscribe to continue submitting answers.'
+        });
+      }
+    } else {
+      // Existing subscription logic (if any)
+      // You can keep your evaluationsRemaining logic here if needed
     }
 
     // Calculate word count
     const wordCount = answerText.trim().split(/\s+/).length;
+
+    // Handle PDF upload
+    let attachments = fileAttachments || [];
+    if (req.file) {
+      attachments.push({
+        filename: req.file.filename,
+        originalname: req.file.originalname,
+        mimetype: req.file.mimetype,
+        path: req.file.path
+      });
+    }
 
     // Create new answer
     const answer = await Answer.create({
@@ -48,7 +65,7 @@ const submitAnswer = async (req, res) => {
       questionText,
       answerText,
       wordCount,
-      fileAttachments: fileAttachments || [],
+      fileAttachments: attachments,
       submissionDate: new Date(),
       status: 'pending'
     });

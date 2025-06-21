@@ -28,6 +28,11 @@ export default function Submissions() {
   const [uploading, setUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [subject, setSubject] = useState('');
+  const [topic, setTopic] = useState('');
+  const [questionTitle, setQuestionTitle] = useState('');
+  const [answerText, setAnswerText] = useState('');
+  const [questionText, setQuestionText] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -95,8 +100,13 @@ export default function Submissions() {
     }
     const formData = new FormData();
     formData.append('pdf', file);
+    formData.append('subject', subject);
+    formData.append('topic', topic);
+    formData.append('questionTitle', questionTitle);
+    formData.append('answerText', answerText);
+    formData.append('questionText', questionText);
     try {
-      const res = await axios.post('http://localhost:5001/api/evaluations/upload', formData, {
+      const res = await axios.post('http://localhost:5001/api/evaluations/submit-answer', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
@@ -107,19 +117,23 @@ export default function Submissions() {
         setUploadMessage('PDF uploaded successfully!');
         // Refresh submissions list
         setLoading(true);
-        const submissionsRes = await axios.get<SubmissionsResponse>('http://localhost:5001/api/evaluations/my-submissions', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (submissionsRes.data.success) {
-          setSubmissions(submissionsRes.data.submissions);
+        try {
+          const submissionsRes = await axios.get<SubmissionsResponse>('http://localhost:5001/api/evaluations/my-submissions', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          if (submissionsRes.data.success) {
+            setSubmissions(submissionsRes.data.submissions);
+          }
+        } finally {
+          setLoading(false);
         }
       } else {
         setUploadMessage(data.message || 'Failed to upload PDF.');
+        setLoading(false);
       }
     } catch (err: any) {
       setUploadMessage(err.response?.data?.message || 'Failed to upload PDF.');
-    } finally {
-      setUploading(false);
+      setLoading(false);
     }
   };
 
@@ -179,26 +193,84 @@ export default function Submissions() {
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           {/* PDF Upload Form */}
-          <div className="mb-8 bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-semibold mb-4">Submit Your Answer as PDF</h2>
-            <form onSubmit={handlePDFUpload} className="flex flex-col sm:flex-row items-center gap-4">
-              <input
-                type="file"
-                accept="application/pdf"
-                ref={fileInputRef}
-                className="border border-gray-300 rounded px-3 py-2"
-                required
-              />
+          <div className="mb-8 bg-white p-6 rounded-lg shadow max-w-2xl mx-auto">
+            <h2 className="text-lg font-semibold mb-4 text-center">Submit Your Answer as PDF</h2>
+            <form onSubmit={handlePDFUpload} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                  <input
+                    type="text"
+                    placeholder="Subject"
+                    value={subject}
+                    onChange={e => setSubject(e.target.value)}
+                    className="border border-gray-300 rounded px-3 py-2 w-full"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Topic</label>
+                  <input
+                    type="text"
+                    placeholder="Topic"
+                    value={topic}
+                    onChange={e => setTopic(e.target.value)}
+                    className="border border-gray-300 rounded px-3 py-2 w-full"
+                    required
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Question Title</label>
+                  <input
+                    type="text"
+                    placeholder="Question Title"
+                    value={questionTitle}
+                    onChange={e => setQuestionTitle(e.target.value)}
+                    className="border border-gray-300 rounded px-3 py-2 w-full"
+                    required
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Answer Text</label>
+                  <textarea
+                    placeholder="Answer Text"
+                    value={answerText}
+                    onChange={e => setAnswerText(e.target.value)}
+                    className="border border-gray-300 rounded px-3 py-2 w-full min-h-[80px]"
+                    required
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Question Text</label>
+                  <textarea
+                    placeholder="Question Text"
+                    value={questionText}
+                    onChange={e => setQuestionText(e.target.value)}
+                    className="border border-gray-300 rounded px-3 py-2 w-full min-h-[80px]"
+                    required
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">PDF File</label>
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    ref={fileInputRef}
+                    className="border border-gray-300 rounded px-3 py-2 w-full"
+                    required
+                  />
+                </div>
+              </div>
               <button
                 type="submit"
                 disabled={uploading}
-                className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 disabled:opacity-50"
+                className="w-full bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 disabled:opacity-50 mt-2"
               >
                 {uploading ? 'Uploading...' : 'Upload PDF'}
               </button>
             </form>
             {uploadMessage && (
-              <div className={`mt-4 ${uploadMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}>{uploadMessage}</div>
+              <div className={`mt-4 text-center ${uploadMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}>{uploadMessage}</div>
             )}
           </div>
 

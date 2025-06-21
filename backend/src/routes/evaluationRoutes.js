@@ -9,11 +9,13 @@ const {
   updateEvaluation,
   getEvaluationStats 
 } = require('../controllers/evaluationController');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const router = express.Router();
 
 // User routes
-router.post('/submit-answer', protect, submitAnswer);
+router.post('/submit-answer', protect, upload.single('pdf'), submitAnswer);
 router.get('/my-submissions', protect, getMySubmissions);
 router.get('/submission/:id', protect, getSubmissionById);
 router.get('/stats', protect, getEvaluationStats);
