@@ -36,7 +36,7 @@ export default function Navbar({ user }: NavbarProps) {
 
   return (
     <>
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-purple-100'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20">
             {/* Left side - Logo and Navigation */}
@@ -164,7 +164,7 @@ export default function Navbar({ user }: NavbarProps) {
                     </button>
                   </div>
                 ) : (
-                  <Link href="/login" className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-300">
+                  <Link href="/login" className="px-5 py-2.5 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 hover:shadow-lg hover:scale-105 transform transition-all duration-300">
                     Login
                   </Link>
                 )}
@@ -228,9 +228,12 @@ export default function Navbar({ user }: NavbarProps) {
                   </button>
                 </div>
               ) : (
-                <div className="space-y-1">
-                  <Link href="/login" className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
+                <div className="space-y-1 px-2 pt-2 pb-3">
+                  <Link href="/login" className="block text-center w-full px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700">
                     Login
+                  </Link>
+                  <Link href="/register" className="block text-center w-full px-4 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-100">
+                    Register
                   </Link>
                 </div>
               )}
