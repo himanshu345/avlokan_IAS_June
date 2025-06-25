@@ -5,7 +5,7 @@ const testimonials = [
   {
     name: 'Sarah Johnson',
     role: 'UPSC Aspirant',
-    testimonial: 'ConvertIAS has transformed my preparation strategy. The personalized feedback and guidance have been invaluable.',
+    testimonial: 'avlokanias has transformed my preparation strategy. The personalized feedback and guidance have been invaluable.',
     image: '/images/testimonials/testimonial-1.svg'
   },
   {

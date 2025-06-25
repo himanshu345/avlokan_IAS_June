@@ -1,6 +1,6 @@
-# ConvertIAS Clone
+# avlokanias Clone
 
-A modern web application for IAS exam preparation, inspired by the ConvertIAS platform. Built with Next.js and Tailwind CSS.
+A modern web application for IAS exam preparation, inspired by the avlokanias platform. Built with Next.js and Tailwind CSS.
 
 ## Features
 
@@ -96,5 +96,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- This project is inspired by the ConvertIAS platform, which provides valuable services for IAS aspirants.
+- This project is inspired by the avlokanias platform, which provides valuable services for IAS aspirants.
 - All design elements are created for educational purposes. 

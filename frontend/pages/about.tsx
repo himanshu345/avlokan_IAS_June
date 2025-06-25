@@ -61,7 +61,7 @@ const About = () => {
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-6">Our Mission is Your Success</h1>
               <p className="text-lg md:text-xl opacity-90 mb-8">
-                ConvertIAS was founded with a simple yet powerful vision: to democratize UPSC preparation and 
+                avlokanias was founded with a simple yet powerful vision: to democratize UPSC preparation and 
                 make quality guidance accessible to every aspirant, regardless of their background.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -96,7 +96,7 @@ const About = () => {
                 <h2 className="text-3xl font-bold mb-6">Our Story</h2>
                 <div className="space-y-4">
                   <p>
-                    ConvertIAS began in 2015 when Dr. Rajiv Sharma, a former IAS officer, recognized a critical gap 
+                    avlokanias began in 2015 when Dr. Rajiv Sharma, a former IAS officer, recognized a critical gap 
                     in UPSC preparation: the lack of personalized feedback and structured guidance for aspirants.
                   </p>
                   <p>
@@ -110,7 +110,7 @@ const About = () => {
                     with expert guidance to provide personalized feedback at scale.
                   </p>
                   <p>
-                    Today, ConvertIAS continues to evolve with the changing patterns of UPSC examinations, but our 
+                    Today, avlokanias continues to evolve with the changing patterns of UPSC examinations, but our 
                     core mission remains the same: to guide aspirants not just in what to study, but how to present 
                     their knowledge effectively.
                   </p>
@@ -134,7 +134,7 @@ const About = () => {
             <div className="max-w-3xl mx-auto text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">Our Core Values</h2>
               <p className="text-text-muted">
-                These principles guide everything we do at ConvertIAS, from content creation to student interactions.
+                These principles guide everything we do at avlokanias, from content creation to student interactions.
               </p>
             </div>
             
@@ -228,7 +228,7 @@ const About = () => {
               <h2 className="text-3xl font-bold mb-4">What Our Students Say</h2>
               <p className="text-text-muted">
                 The success stories of our students are our greatest achievement. Here's what some of them have to say 
-                about their experience with ConvertIAS.
+                about their experience with avlokanias.
               </p>
             </div>
             
@@ -246,7 +246,7 @@ const About = () => {
                   </div>
                 </div>
                 <p className="text-text-muted">
-                  "The answer writing program at ConvertIAS was a game-changer for me. After two unsuccessful attempts, I realized 
+                  "The answer writing program at avlokanias was a game-changer for me. After two unsuccessful attempts, I realized 
                   my knowledge was adequate but my presentation was lacking. The detailed feedback from experts helped me structure 
                   my answers effectively, which made all the difference in my third attempt."
                 </p>
@@ -265,7 +265,7 @@ const About = () => {
                   </div>
                 </div>
                 <p className="text-text-muted">
-                  "Being from a small town, access to quality UPSC coaching was a major challenge for me. ConvertIAS's online 
+                  "Being from a small town, access to quality UPSC coaching was a major challenge for me. avlokanias's online 
                   platform bridged that gap. The personalized study plan and regular evaluation of my answers gave me the 
                   structure and feedback I needed. The mentors were always available to clear my doubts."
                 </p>
@@ -285,7 +285,7 @@ const About = () => {
           <div className="container-custom text-center">
             <h2 className="text-3xl font-bold mb-4">Begin Your Journey to Success</h2>
             <p className="max-w-2xl mx-auto mb-8 opacity-90">
-              Join thousands of successful candidates who have transformed their UPSC preparation with ConvertIAS. 
+              Join thousands of successful candidates who have transformed their UPSC preparation with avlokanias. 
               Start your journey today and take the first step toward your dream career in civil services.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">

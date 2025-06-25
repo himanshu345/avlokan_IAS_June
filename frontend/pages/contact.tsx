@@ -45,8 +45,8 @@ const Contact = () => {
                     </div>
                     <div className="ml-4">
                       <h3 className="text-sm font-medium text-text">Email</h3>
-                      <p className="mt-1 text-sm text-text-muted">info@convertias.com</p>
-                      <p className="mt-1 text-sm text-text-muted">support@convertias.com</p>
+                      <p className="mt-1 text-sm text-text-muted">info@avlokanias.com</p>
+                      <p className="mt-1 text-sm text-text-muted">support@avlokanias.com</p>
                     </div>
                   </div>
                   
@@ -243,7 +243,7 @@ const Contact = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="card p-6">
-                <h3 className="text-lg font-bold mb-2">How do I get started with ConvertIAS?</h3>
+                <h3 className="text-lg font-bold mb-2">How do I get started with avlokanias?</h3>
                 <p className="text-text-muted">
                   Getting started is easy! Simply create an account, choose a subscription plan that fits your needs, and you'll have immediate access to our preparation materials and features.
                 </p>
@@ -257,7 +257,7 @@ const Contact = () => {
               </div>
               
               <div className="card p-6">
-                <h3 className="text-lg font-bold mb-2">Can I access ConvertIAS on mobile devices?</h3>
+                <h3 className="text-lg font-bold mb-2">Can I access avlokanias on mobile devices?</h3>
                 <p className="text-text-muted">
                   Yes! Our platform is fully responsive and can be accessed on any device including smartphones and tablets. We also have mobile apps available for both iOS and Android.
                 </p>

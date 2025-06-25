@@ -23,8 +23,8 @@ const contactMethods = [
   {
     icon: '✉️',
     label: 'Email',
-    value: 'support@avlokanias.com',
-    link: 'mailto:support@avlokanias.com'
+    value: 'avlokanias.info@gmail.com',
+    link: 'mailto:avlokanias.info@gmail.com'
   }
 ];
 

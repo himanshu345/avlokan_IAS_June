@@ -1,7 +1,7 @@
 {
-  "name": "convertias-backend",
+  "name": "avlokanias-backend",
   "version": "1.0.0",
-  "description": "Backend API for ConvertIAS - UPSC preparation platform",
+  "description": "Backend API for avlokanias - UPSC preparation platform",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",

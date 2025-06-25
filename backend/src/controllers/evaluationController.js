@@ -10,19 +10,20 @@ const User = require('../models/User');
 const submitAnswer = async (req, res) => {
   try {
     const { 
-      subject, 
-      topic, 
-      questionTitle, 
-      questionText, 
-      answerText, 
-      fileAttachments 
+      subject
     } = req.body;
 
     // Validate required fields
-    if (!subject || !topic || !questionTitle || !answerText) {
+    if (!subject) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide subject, topic, question title, and answer text'
+        message: 'Please provide subject'
+      });
+    }
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please upload a PDF file'
       });
     }
 
@@ -42,11 +43,8 @@ const submitAnswer = async (req, res) => {
       // You can keep your evaluationsRemaining logic here if needed
     }
 
-    // Calculate word count
-    const wordCount = answerText.trim().split(/\s+/).length;
-
     // Handle PDF upload
-    let attachments = fileAttachments || [];
+    let attachments = [];
     if (req.file) {
       attachments.push({
         filename: req.file.filename,
@@ -60,11 +58,6 @@ const submitAnswer = async (req, res) => {
     const answer = await Answer.create({
       user: req.user._id,
       subject,
-      topic,
-      questionTitle,
-      questionText,
-      answerText,
-      wordCount,
       fileAttachments: attachments,
       submissionDate: new Date(),
       status: 'pending'
@@ -465,6 +458,25 @@ const getEvaluationStats = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Get all submissions (admin only)
+ * @route   GET /api/evaluations
+ * @access  Private/Admin
+ */
+const getAllSubmissions = async (req, res) => {
+  try {
+    const submissions = await Answer.find({ isDeleted: false })
+      .populate('user', 'name email')
+      .populate({
+        path: 'evaluation',
+        select: 'totalScore evaluationDate status feedback'
+      });
+    res.json({ success: true, submissions });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+};
+
 module.exports = {
   submitAnswer,
   getMySubmissions,
@@ -472,5 +484,6 @@ module.exports = {
   getPendingSubmissions,
   submitEvaluation,
   updateEvaluation,
-  getEvaluationStats
+  getEvaluationStats,
+  getAllSubmissions
 }; 

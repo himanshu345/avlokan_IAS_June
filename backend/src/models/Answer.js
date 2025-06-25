@@ -13,20 +13,20 @@ const answerSchema = new mongoose.Schema({
   },
   topic: {
     type: String,
-    required: [true, 'Topic is required'],
+    required: false,
     trim: true
   },
   questionTitle: {
     type: String,
-    required: [true, 'Question title is required']
+    required: false
   },
   questionText: {
     type: String,
-    required: [true, 'Question text is required']
+    required: false
   },
   answerText: {
     type: String,
-    required: [true, 'Answer text is required']
+    required: false
   },
   submissionDate: {
     type: Date,
@@ -43,7 +43,7 @@ const answerSchema = new mongoose.Schema({
   },
   wordCount: {
     type: Number,
-    required: true
+    required: false
   },
   fileAttachments: [{
     filename: String,

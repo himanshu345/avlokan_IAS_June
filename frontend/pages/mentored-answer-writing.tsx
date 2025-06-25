@@ -57,7 +57,7 @@ export default function MentoredAnswerWriting() {
   return (
     <>
       <Head>
-        <title>Mentored Answer Writing - ConvertIAS</title>
+        <title>Mentored Answer Writing - avlokanias</title>
         <meta name="description" content="Join our Mentored Answer Writing program for personalized guidance and feedback" />
       </Head>
 
@@ -121,7 +121,7 @@ export default function MentoredAnswerWriting() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-gray-900 mb-1">CAWG - 19th May</h3>
-                    <p className="text-gray-600 mb-2">ConvertIAS Answer Writing Group (CAWG)</p>
+                    <p className="text-gray-600 mb-2">avlokanias Answer Writing Group (CAWG)</p>
                     <a href="#" className="text-purple-600 hover:text-purple-700 text-sm font-medium">
                       View Course
                     </a>

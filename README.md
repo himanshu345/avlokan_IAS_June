@@ -1,4 +1,4 @@
-# ConvertIAS Platform
+# avlokanias Platform
 
 A comprehensive UPSC preparation platform that helps aspirants with answer writing practice, evaluation, and resources.
 

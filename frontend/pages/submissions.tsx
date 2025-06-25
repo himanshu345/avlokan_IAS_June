@@ -10,7 +10,7 @@ interface Submission {
   status: 'pending' | 'evaluated';
   score?: number;
   feedback?: string;
-  submittedAt: string;
+  submissionDate: string;
 }
 
 interface SubmissionsResponse {
@@ -29,10 +29,6 @@ export default function Submissions() {
   const [uploadMessage, setUploadMessage] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [subject, setSubject] = useState('');
-  const [topic, setTopic] = useState('');
-  const [questionTitle, setQuestionTitle] = useState('');
-  const [answerText, setAnswerText] = useState('');
-  const [questionText, setQuestionText] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -101,10 +97,6 @@ export default function Submissions() {
     const formData = new FormData();
     formData.append('pdf', file);
     formData.append('subject', subject);
-    formData.append('topic', topic);
-    formData.append('questionTitle', questionTitle);
-    formData.append('answerText', answerText);
-    formData.append('questionText', questionText);
     try {
       const res = await axios.post('http://localhost:5000/api/evaluations/submit-answer', formData, {
         headers: {
@@ -115,6 +107,7 @@ export default function Submissions() {
       const data: any = res.data;
       if (data.success) {
         setUploadMessage('PDF uploaded successfully!');
+        setUploading(false);
         // Refresh submissions list
         setLoading(true);
         try {
@@ -129,11 +122,23 @@ export default function Submissions() {
         }
       } else {
         setUploadMessage(data.message || 'Failed to upload PDF.');
+        setUploading(false);
         setLoading(false);
+        if (data.message === 'You have used your 2 free uploads. Please subscribe to continue submitting answers.') {
+          setTimeout(() => {
+            router.push('/evaluation-plans');
+          }, 2500); // Show message for 2.5 seconds before redirect
+        }
       }
     } catch (err: any) {
       setUploadMessage(err.response?.data?.message || 'Failed to upload PDF.');
+      setUploading(false);
       setLoading(false);
+      if (err.response?.data?.message === 'You have used your 2 free uploads. Please subscribe to continue submitting answers.') {
+        setTimeout(() => {
+          router.push('/evaluation-plans');
+        }, 2500);
+      }
     }
   };
 
@@ -196,7 +201,7 @@ export default function Submissions() {
           <div className="mb-8 bg-white p-6 rounded-lg shadow max-w-2xl mx-auto">
             <h2 className="text-lg font-semibold mb-4 text-center">Submit Your Answer as PDF</h2>
             <form onSubmit={handlePDFUpload} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
                   <input
@@ -209,48 +214,6 @@ export default function Submissions() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Topic</label>
-                  <input
-                    type="text"
-                    placeholder="Topic"
-                    value={topic}
-                    onChange={e => setTopic(e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-2 w-full"
-                    required
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Question Title</label>
-                  <input
-                    type="text"
-                    placeholder="Question Title"
-                    value={questionTitle}
-                    onChange={e => setQuestionTitle(e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-2 w-full"
-                    required
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Answer Text</label>
-                  <textarea
-                    placeholder="Answer Text"
-                    value={answerText}
-                    onChange={e => setAnswerText(e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-2 w-full min-h-[80px]"
-                    required
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Question Text</label>
-                  <textarea
-                    placeholder="Question Text"
-                    value={questionText}
-                    onChange={e => setQuestionText(e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-2 w-full min-h-[80px]"
-                    required
-                  />
-                </div>
-                <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">PDF File</label>
                   <input
                     type="file"
@@ -270,7 +233,9 @@ export default function Submissions() {
               </button>
             </form>
             {uploadMessage && (
-              <div className={`mt-4 text-center ${uploadMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}>{uploadMessage}</div>
+              <div className={`mt-4 text-center ${uploadMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}>
+                {uploadMessage}
+              </div>
             )}
           </div>
 
@@ -314,7 +279,7 @@ export default function Submissions() {
                   <p className="text-gray-600 mb-4 line-clamp-3">{submission.answer}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-500">
-                      Submitted on {new Date(submission.submittedAt).toLocaleDateString()}
+                      Submitted on {new Date(submission.submissionDate).toLocaleDateString()}
                     </span>
                     {submission.status === 'evaluated' && (
                       <div className="flex items-center space-x-4">
@@ -344,4 +309,4 @@ export default function Submissions() {
       </main>
     </div>
   );
-} 
+}

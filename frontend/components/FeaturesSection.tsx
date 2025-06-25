@@ -63,7 +63,7 @@ const FeaturesSection = () => {
       <div className="container-custom">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose ConvertIAS</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose avlokanias</h2>
           <p className="max-w-3xl mx-auto text-text-muted">
             We offer a comprehensive suite of services designed to enhance your UPSC preparation and maximize your chances of success.
           </p>

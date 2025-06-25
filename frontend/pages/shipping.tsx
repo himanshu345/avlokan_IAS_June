@@ -62,19 +62,19 @@ export default function Shipping() {
   return (
     <div className="min-h-screen bg-white">
       <Head>
-        <title>Shipping Policy - AvlokanIAS</title>
-        <meta name="description" content="Shipping Policy for AvlokanIAS - Your trusted platform for UPSC answer writing practice and expert evaluation." />
+        <title>Shipping Policy - avlokanias</title>
+        <meta name="description" content="Shipping Policy for avlokanias - Your trusted platform for UPSC answer writing practice and expert evaluation." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar user={user} />
       <main className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">ConvertIAS Shipping Policy</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">avlokanias Shipping Policy</h1>
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">1. Shipping Overview</h2>
           <div className="prose prose-lg">
             <p>
-              ConvertIAS provides digital and physical educational materials. This policy outlines delivery timelines, charges, and shipping details.
+              avlokanias provides digital and physical educational materials. This policy outlines delivery timelines, charges, and shipping details.
             </p>
           </div>
         </section>
@@ -115,7 +115,7 @@ export default function Shipping() {
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">5. Address Accuracy</h2>
           <div className="prose prose-lg">
             <p>
-              Ensure correct shipping details. ConvertIAS is not responsible for delays due to incorrect addresses.
+              Ensure correct shipping details. avlokanias is not responsible for delays due to incorrect addresses.
             </p>
           </div>
         </section>
@@ -125,7 +125,7 @@ export default function Shipping() {
           <div className="prose prose-lg">
             <p>Track orders using the provided ID. For inquiries, contact:</p>
             <div className="mt-4 space-y-2">
-              <p>📧 Email: info@convertias.com</p>
+              <p>📧 Email: info@avlokanias.com</p>
               <p>📞 Phone: 7838724075</p>
             </div>
           </div>
@@ -151,7 +151,7 @@ export default function Shipping() {
         </section>
 
         <div className="mt-8 text-sm text-gray-600">
-          <p>ConvertIAS reserves the right to update this policy anytime. Check regularly for updates.</p>
+          <p>avlokanias reserves the right to update this policy anytime. Check regularly for updates.</p>
         </div>
       </main>
       <ContactAndFooter />

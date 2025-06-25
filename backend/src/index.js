@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const paymentRoutes = require('./routes/payment');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
+const path = require('path');
 
 // Initialize Express app
 const app = express();
@@ -16,6 +17,9 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Serve uploads folder statically
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Initialize Razorpay
 const razorpay = new Razorpay({
@@ -71,11 +75,11 @@ app.post('/api/payment/verify', async (req, res) => {
 
 // Welcome route
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to ConvertIAS API' });
+  res.json({ message: 'Welcome to avlokanias API' });
 });
 
 // Connect to MongoDB
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/convertias';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/avlokanias';
 mongoose.connect(MONGO_URI)
   .then(() => {
     console.log('Connected to MongoDB');

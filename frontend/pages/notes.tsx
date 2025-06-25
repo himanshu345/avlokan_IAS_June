@@ -55,7 +55,7 @@ export default function Notes() {
   return (
     <>
       <Head>
-        <title>Notes - IAS ConvertIAS</title>
+        <title>Notes - IAS avlokanias</title>
         <meta name="description" content="Access high-quality study materials and notes for UPSC preparation" />
       </Head>
 

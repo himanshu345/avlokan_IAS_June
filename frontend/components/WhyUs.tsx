@@ -21,7 +21,7 @@ export default function WhyUs() {
             className="mb-12 lg:mb-0"
           >
             <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl mb-6">
-              Why Choose Convertias?
+              Why Choose avlokanias?
             </h2>
             <p className="text-lg text-gray-600 mb-8">
               We combine technical expertise with creative thinking to deliver exceptional digital solutions that drive results.

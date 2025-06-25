@@ -35,7 +35,7 @@ const TestimonialsSection = () => {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Success Stories</h2>
           <p className="max-w-3xl mx-auto text-text-muted">
-            Hear from our students who achieved their UPSC dreams with ConvertIAS's expert guidance and evaluation services.
+            Hear from our students who achieved their UPSC dreams with avlokanias's expert guidance and evaluation services.
           </p>
         </div>
 

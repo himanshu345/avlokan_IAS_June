@@ -131,7 +131,7 @@ const Blog = () => {
       <main className="flex-grow bg-background py-12">
         {/* Featured Posts Section */}
         <section className="container-custom mb-16">
-          <h1 className="text-4xl font-bold mb-10 text-center">ConvertIAS Blog</h1>
+          <h1 className="text-4xl font-bold mb-10 text-center">avlokanias Blog</h1>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredPosts.map((post, index) => (

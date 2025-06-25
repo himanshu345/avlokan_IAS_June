@@ -43,10 +43,10 @@ export default function Hero() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative h-[500px] flex flex-col items-center justify-center gap-6"
+            className="relative flex flex-col items-center justify-center w-full"
           >
-            <div className="flex flex-col lg:flex-row items-center justify-center gap-6 h-full w-full">
-              <div className="relative w-64 h-64">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-8 w-full">
+              <div className="relative w-[80vw] max-w-[800px] sm:w-[100%] sm:max-w-[800px] aspect-square">
                 <Image
                   src="/Images/MSP.jpeg"
                   alt="MSP Illustration"
@@ -55,7 +55,7 @@ export default function Hero() {
                   priority
                 />
               </div>
-              <div className="relative w-64 h-64">
+              <div className="relative w-[80vw] max-w-[8000px] sm:w-[100%] sm:max-w-[800px] aspect-square">
                 <Image
                   src="/Images/PMP.jpeg"
                   alt="PMP Illustration"
