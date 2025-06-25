@@ -36,7 +36,8 @@ const FAQSection = () => {
     },
   ];
 
-  const [activeIndex, setActiveIndex] = useState(null);
+  // const [activeIndex, setActiveIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   // const toggleFAQ = (index) => {
   //   setActiveIndex(activeIndex === index ? null : index);
