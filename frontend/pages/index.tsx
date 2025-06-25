@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
+
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 // Toppers section temporarily disabled
@@ -47,7 +48,8 @@ export default function Home() {
       } catch (err) {
         console.error('Error fetching profile:', err);
         // Don't set error for unauthorized access
-        if (axios.isAxiosError(err) && err.response?.status !== 401) {
+        if (isAxiosError(err) && err.response?.status !== 401) {
+        // if (axios.isAxiosError(err) && err.response?.status !== 401) {
           setError('Failed to load user profile');
         }
       } finally {
