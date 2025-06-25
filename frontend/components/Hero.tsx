@@ -43,15 +43,28 @@ export default function Hero() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative h-[500px]"
+            className="relative h-[500px] flex flex-col items-center justify-center gap-6"
           >
-            <Image
-              src="/images/hero-illustration.svg"
-              alt="UPSC Preparation Illustration"
-              layout="fill"
-              objectFit="contain"
-              priority
-            />
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-6 h-full w-full">
+              <div className="relative w-64 h-64">
+                <Image
+                  src="/Images/MSP.jpeg"
+                  alt="MSP Illustration"
+                  layout="fill"
+                  objectFit="contain"
+                  priority
+                />
+              </div>
+              <div className="relative w-64 h-64">
+                <Image
+                  src="/Images/PMP.jpeg"
+                  alt="PMP Illustration"
+                  layout="fill"
+                  objectFit="contain"
+                  priority
+                />
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>

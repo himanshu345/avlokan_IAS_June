@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>ConvertIAS Clone</title>
+        <title>AvlokanIAS</title>
         <meta name="description" content="A platform for IAS exam preparation" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

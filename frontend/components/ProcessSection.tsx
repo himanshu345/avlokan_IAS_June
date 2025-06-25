@@ -11,7 +11,7 @@ export default function ProcessSection() {
       description: 'Write answers to questions from any source of your choice'
     },
     {
-      icon: '/icons/upload.svg',
+      icon: '/Images/upload.png',
       title: '2. Upload it on the website',
       description: 'Upload them on our website through your personal dashboard'
     },
