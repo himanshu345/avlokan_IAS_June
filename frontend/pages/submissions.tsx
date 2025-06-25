@@ -43,7 +43,7 @@ export default function Submissions() {
 
     const fetchSubmissions = async () => {
       try {
-        const res = await axios.get<SubmissionsResponse>('http://localhost:5001/api/evaluations/my-submissions', {
+        const res = await axios.get<SubmissionsResponse>('http://localhost:5000/api/evaluations/my-submissions', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -106,7 +106,7 @@ export default function Submissions() {
     formData.append('answerText', answerText);
     formData.append('questionText', questionText);
     try {
-      const res = await axios.post('http://localhost:5001/api/evaluations/submit-answer', formData, {
+      const res = await axios.post('http://localhost:5000/api/evaluations/submit-answer', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
@@ -118,7 +118,7 @@ export default function Submissions() {
         // Refresh submissions list
         setLoading(true);
         try {
-          const submissionsRes = await axios.get<SubmissionsResponse>('http://localhost:5001/api/evaluations/my-submissions', {
+          const submissionsRes = await axios.get<SubmissionsResponse>('http://localhost:5000/api/evaluations/my-submissions', {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (submissionsRes.data.success) {

@@ -31,7 +31,7 @@ export default function Shipping() {
 
     const fetchProfile = async () => {
       try {
-        const res = await axios.get<ProfileResponse>('http://localhost:5001/api/users/profile', {
+        const res = await axios.get<ProfileResponse>('http://localhost:5000/api/users/profile', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -126,7 +126,7 @@ export default function Shipping() {
             <p>Track orders using the provided ID. For inquiries, contact:</p>
             <div className="mt-4 space-y-2">
               <p>📧 Email: info@convertias.com</p>
-              <p>📞 Phone: 9108075088</p>
+              <p>📞 Phone: 7838724075</p>
             </div>
           </div>
         </section>

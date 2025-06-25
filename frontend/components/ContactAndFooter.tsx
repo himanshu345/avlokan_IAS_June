@@ -5,8 +5,8 @@ const contactMethods = [
   {
     icon: '📞',
     label: 'Phone',
-    value: '+91 1234567890',
-    link: 'tel:+911234567890'
+    value: '+91 7838724075',
+    link: 'tel:+917838724075'
   },
   {
     icon: '📱',
@@ -17,8 +17,8 @@ const contactMethods = [
   {
     icon: '💬',
     label: 'WhatsApp',
-    value: '+91 1234567890',
-    link: 'https://wa.me/911234567890'
+    value: '+91 7838724075',
+    link: 'https://wa.me/917838724075'
   },
   {
     icon: '✉️',

@@ -54,7 +54,7 @@ export default function Register() {
     }
 
     try {
-      const res = await axios.post<RegisterResponse>('http://localhost:5001/api/users/register', {
+      const res = await axios.post<RegisterResponse>('http://localhost:5000/api/users/register', {
         name,
         email,
         password
@@ -77,7 +77,7 @@ export default function Register() {
     try {
       const decoded = jwtDecode<GoogleUser>(credentialResponse.credential);
       
-      const res = await axios.post<RegisterResponse>('http://localhost:5001/api/users/google-auth', {
+      const res = await axios.post<RegisterResponse>('http://localhost:5000/api/users/google-auth', {
         name: decoded.name,
         email: decoded.email,
         googleId: decoded.sub,

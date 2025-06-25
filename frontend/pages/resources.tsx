@@ -37,7 +37,7 @@ export default function Resources() {
 
     const fetchResources = async () => {
       try {
-        const res = await axios.get<ResourcesResponse>('http://localhost:5001/api/resources', {
+        const res = await axios.get<ResourcesResponse>('http://localhost:5000/api/resources', {
           headers: {
             Authorization: `Bearer ${token}`
           }

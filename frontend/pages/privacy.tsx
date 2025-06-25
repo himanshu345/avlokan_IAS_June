@@ -31,7 +31,7 @@ export default function Privacy() {
 
     const fetchProfile = async () => {
       try {
-        const res = await axios.get<ProfileResponse>('http://localhost:5001/api/users/profile', {
+        const res = await axios.get<ProfileResponse>('http://localhost:5000/api/users/profile', {
           headers: {
             Authorization: `Bearer ${token}`
           }

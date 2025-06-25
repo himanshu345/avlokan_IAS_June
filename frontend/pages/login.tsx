@@ -34,7 +34,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post<LoginResponse>('http://localhost:5001/api/users/login', {
+      const res = await axios.post<LoginResponse>('http://localhost:5000/api/users/login', {
         email,
         password
       });
@@ -63,7 +63,7 @@ export default function Login() {
   const handleGoogleSuccess = async (credentialResponse: any) => {
     try {
       const decoded: any = jwtDecode(credentialResponse.credential);
-      const res = await axios.post<LoginResponse>('http://localhost:5001/api/users/google-auth', {
+      const res = await axios.post<LoginResponse>('http://localhost:5000/api/users/google-auth', {
         name: decoded.name,
         email: decoded.email,
         googleId: decoded.sub,
