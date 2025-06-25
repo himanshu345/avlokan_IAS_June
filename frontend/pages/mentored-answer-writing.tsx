@@ -5,6 +5,8 @@ import Navbar from '../components/Navbar';
 import ContactAndFooter from '../components/ContactAndFooter';
 import { FaTelegram, FaThumbsUp, FaChevronRight, FaPencilAlt } from 'react-icons/fa';
 import Link from 'next/link';
+import type { IconType } from 'react-icons';
+const ChevronRight = FaChevronRight as IconType;
 
 interface User {
   _id: string;
@@ -88,7 +90,7 @@ export default function MentoredAnswerWriting() {
               className="lg:hidden flex items-center justify-between w-full bg-white p-4 rounded-lg shadow-sm mb-4"
             >
               <span className="font-medium">Mentored Answer Writing</span>
-              <FaChevronRight className={`transform transition-transform ${isMobileMenuOpen ? 'rotate-90' : ''}`} />
+              <ChevronRight className={`transform transition-transform ${isMobileMenuOpen ? 'rotate-90' : ''}`} />
             </button>
 
             {/* Left Sidebar */}
@@ -98,15 +100,15 @@ export default function MentoredAnswerWriting() {
                 <nav className="space-y-2">
                   <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition-colors flex items-center justify-between">
                     Mentored Answer Writing
-                    <FaChevronRight className="text-gray-400" />
+                    <ChevronRight className="text-gray-400" />
                   </a>
                   <a href="#" className="block px-4 py-2 bg-purple-600 text-white rounded-md font-medium flex items-center justify-between">
                     CAWG
-                    <FaChevronRight className="text-white" />
+                    <ChevronRight className="text-white" />
                   </a>
                   <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition-colors flex items-center justify-between">
                     My Sessions
-                    <FaChevronRight className="text-gray-400" />
+                    <ChevronRight className="text-gray-400" />
                   </a>
                 </nav>
               </div>
