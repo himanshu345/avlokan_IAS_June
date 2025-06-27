@@ -40,8 +40,9 @@ export default function AdminDashboard() {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {
-        setUser(res.data.user);
-        if (res.data.user.role !== 'admin') {
+        const data = res.data as { user: User };
+        setUser(data.user);
+        if (data.user.role !== 'admin') {
           router.push('/');
         } else {
           fetchData(token);
@@ -59,8 +60,8 @@ export default function AdminDashboard() {
         axios.get('http://localhost:5000/api/users', { headers: { Authorization: `Bearer ${token}` } }),
         axios.get('http://localhost:5000/api/evaluations', { headers: { Authorization: `Bearer ${token}` } })
       ]);
-      setUsers(usersRes.data.users || usersRes.data);
-      setSubmissions(submissionsRes.data.submissions || submissionsRes.data);
+      setUsers((usersRes.data as { users: User[] }).users || (usersRes.data as User[]));
+      setSubmissions((submissionsRes.data as { submissions: Submission[] }).submissions || (submissionsRes.data as Submission[]));
     } catch (err) {
       setError('Failed to load admin data');
     } finally {
@@ -143,8 +144,8 @@ export default function AdminDashboard() {
                     )}
                   </td>
                   <td className="p-2">
-                    {sub.evaluatedFile ? (
-                      <button className="text-green-600 underline" onClick={() => handleDownload(sub.evaluatedFile.path)}>Download</button>
+                    {sub.evaluatedFile?.path ? (
+                      <button className="text-green-600 underline" onClick={() => handleDownload(sub.evaluatedFile!.path)}>Download</button>
                     ) : 'Not uploaded'}
                   </td>
                   <td className="p-2">
