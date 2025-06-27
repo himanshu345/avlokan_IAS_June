@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import Navbar from '../components/Navbar';
 import ContactAndFooter from '../components/ContactAndFooter';
 import Head from 'next/head';
@@ -39,7 +39,7 @@ export default function Privacy() {
         setUser(res.data.user);
       } catch (err) {
         console.error('Error fetching profile:', err);
-        if (axios.isAxiosError(err) && err.response?.status !== 401) {
+        if (isAxiosError(err) && err.response?.status !== 401) {
           setError('Failed to load user profile');
         }
       } finally {
