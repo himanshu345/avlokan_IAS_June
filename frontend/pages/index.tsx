@@ -47,8 +47,7 @@ export default function Home() {
       } catch (err) {
         console.error('Error fetching profile:', err);
         // Don't set error for unauthorized access
-        if ((axios as any).isAxiosError(err) && (err as any).response?.status !== 401) {
-        // if (axios.isAxiosError(err) && err.response?.status !== 401) {
+        if (err && typeof err === 'object' && 'isAxiosError' in err && (err as any).isAxiosError && (err as any).response?.status !== 401) {
           setError('Failed to load user profile');
         }
       } finally {

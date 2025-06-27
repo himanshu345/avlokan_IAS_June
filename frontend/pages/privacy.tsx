@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import axios, { isAxiosError } from 'axios';
+import axios from 'axios';
 import Navbar from '../components/Navbar';
 import ContactAndFooter from '../components/ContactAndFooter';
 import Head from 'next/head';
