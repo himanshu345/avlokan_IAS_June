@@ -119,7 +119,7 @@ export default function MentoredAnswerWriting() {
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <div className="flex items-start gap-4">
                   <div className="bg-purple-100 p-3 rounded-lg">
-                    <FaPencilAlt className="text-purple-600 text-xl" />
+                    {FaPencilAlt({ className: "text-purple-600 text-xl" })}
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-gray-900 mb-1">CAWG - 19th May</h3>
