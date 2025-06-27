@@ -39,7 +39,7 @@ export default function Privacy() {
         setUser(res.data.user);
       } catch (err) {
         console.error('Error fetching profile:', err);
-        if (axios.isAxiosError(err) && err.response?.status !== 401) {
+        if (err && typeof err === 'object' && 'isAxiosError' in err && (err as any).isAxiosError && (err as any).response?.status !== 401) {
           setError('Failed to load user profile');
         }
       } finally {
