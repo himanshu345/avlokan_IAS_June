@@ -138,7 +138,7 @@ export default function MentoredAnswerWriting() {
                       <span className="text-sm text-gray-500 ml-1">(including GST)</span>
                     </div>
                     <div className="flex items-center text-purple-600">
-                      <FaThumbsUp className="mr-1" />
+                      {FaThumbsUp({ className: "mr-1" })}
                       <span>93 likes</span>
                     </div>
                   </div>
