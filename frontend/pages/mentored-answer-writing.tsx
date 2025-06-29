@@ -90,7 +90,7 @@ export default function MentoredAnswerWriting() {
               className="lg:hidden flex items-center justify-between w-full bg-white p-4 rounded-lg shadow-sm mb-4"
             >
               <span className="font-medium">Mentored Answer Writing</span>
-              {FaChevronRight({ className: `transform transition-transform ${isMobileMenuOpen ? 'rotate-90' : ''}` })}
+              <ChevronRight className={`transform transition-transform ${isMobileMenuOpen ? 'rotate-90' : ''}`} />
             </button>
 
             {/* Left Sidebar */}
@@ -100,15 +100,15 @@ export default function MentoredAnswerWriting() {
                 <nav className="space-y-2">
                   <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition-colors flex items-center justify-between">
                     Mentored Answer Writing
-                    {FaChevronRight({ className: "text-gray-400" })}
+                    <ChevronRight className="text-gray-400" />
                   </a>
                   <a href="#" className="block px-4 py-2 bg-purple-600 text-white rounded-md font-medium flex items-center justify-between">
                     CAWG
-                    {FaChevronRight({ className: "text-white" })}
+                    <ChevronRight className="text-white" />
                   </a>
                   <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition-colors flex items-center justify-between">
                     My Sessions
-                    {FaChevronRight({ className: "text-gray-400" })}
+                    <ChevronRight className="text-gray-400" />
                   </a>
                 </nav>
               </div>
@@ -119,7 +119,7 @@ export default function MentoredAnswerWriting() {
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <div className="flex items-start gap-4">
                   <div className="bg-purple-100 p-3 rounded-lg">
-                    {FaPencilAlt({ className: "text-purple-600 text-xl" })}
+                    <FaPencilAlt className="text-purple-600 text-xl" />
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-gray-900 mb-1">CAWG - 19th May</h3>
@@ -138,7 +138,7 @@ export default function MentoredAnswerWriting() {
                       <span className="text-sm text-gray-500 ml-1">(including GST)</span>
                     </div>
                     <div className="flex items-center text-purple-600">
-                      {FaThumbsUp({ className: "mr-1" })}
+                      <FaThumbsUp className="mr-1" />
                       <span>93 likes</span>
                     </div>
                   </div>
@@ -162,7 +162,7 @@ export default function MentoredAnswerWriting() {
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
       >
-        {FaTelegram({ className: "text-2xl" })}
+        <FaTelegram className="text-2xl" />
       </a>
 
       <ContactAndFooter />
