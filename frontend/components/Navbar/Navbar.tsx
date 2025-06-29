@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
-import PrelimsPanel from './PrelimsPanel';
+import PrelimsPanel from '../PrelimsPanel/PrelimsPanel';
 
 interface User {
   id: string;
@@ -112,9 +112,6 @@ export default function Navbar({ user }: NavbarProps) {
                 <Link href="/contact">
                   <div className="text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">Contact Us</div>
                 </Link>
-                <Link href="/reviews">
-                  <div className="text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">Reviews</div>
-                </Link>
               </div>
             </div>
 
@@ -199,9 +196,6 @@ export default function Navbar({ user }: NavbarProps) {
               </Link>
               <Link href="/contact" className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Contact Us
-              </Link>
-              <Link href="/reviews" className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
-                Reviews
               </Link>
             </div>
             <div className="pt-4 pb-3 border-t border-indigo-100">

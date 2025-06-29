@@ -1,12 +1,12 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Navbar from '../components/Navbar/Navbar';
+import Footer from '../components/Footer/Footer';
 
 const Contact = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-grow bg-background py-16">
+      <main className="flex-grow bg-background py-16 pt-24">
         <div className="container-custom">
           {/* Page Header */}
           <div className="text-center mb-12">
@@ -32,7 +32,7 @@ const Contact = () => {
                     </div>
                     <div className="ml-4">
                       <h3 className="text-sm font-medium text-text">Phone</h3>
-                      <p className="mt-1 text-sm text-text-muted">+91 98765 43210</p>
+                      <p className="mt-1 text-sm text-text-muted">+91 7838724075</p>
                       <p className="mt-1 text-sm text-text-muted">Mon-Fri, 9:00 AM - 6:00 PM</p>
                     </div>
                   </div>
@@ -45,26 +45,7 @@ const Contact = () => {
                     </div>
                     <div className="ml-4">
                       <h3 className="text-sm font-medium text-text">Email</h3>
-                      <p className="mt-1 text-sm text-text-muted">info@avlokanias.com</p>
-                      <p className="mt-1 text-sm text-text-muted">support@avlokanias.com</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
-                    <div className="ml-4">
-                      <h3 className="text-sm font-medium text-text">Office Address</h3>
-                      <p className="mt-1 text-sm text-text-muted">
-                        123 Education Street, Academic Tower
-                      </p>
-                      <p className="mt-1 text-sm text-text-muted">
-                        New Delhi - 110001, India
-                      </p>
+                      <p className="mt-1 text-sm text-text-muted">avlokanias.info@gmail.com</p>
                     </div>
                   </div>
                 </div>
@@ -218,20 +199,6 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Map Section */}
-          <div className="mt-16">
-            <h2 className="text-2xl font-bold mb-6">Our Location</h2>
-            <div className="aspect-[21/9] bg-gray-200 rounded-xl w-full flex items-center justify-center">
-              <div className="text-center text-gray-500">
-                <svg className="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                </svg>
-                <p className="text-sm font-medium">Interactive Map would be displayed here</p>
-                <p className="text-xs mt-1">(Requires Google Maps API integration)</p>
-              </div>
-            </div>
-          </div>
-
           {/* FAQs Section */}
           <div className="mt-16">
             <div className="text-center mb-10">
@@ -269,12 +236,6 @@ const Contact = () => {
                   We accept various payment methods including credit/debit cards, net banking, UPI, and popular digital wallets. All transactions are secure and encrypted.
                 </p>
               </div>
-            </div>
-            
-            <div className="text-center mt-8">
-              <a href="#" className="text-primary font-medium hover:underline">
-                View all FAQs →
-              </a>
             </div>
           </div>
         </div>

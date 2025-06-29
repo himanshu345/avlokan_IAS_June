@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/Navbar/Navbar';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import Head from 'next/head';
 
