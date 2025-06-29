@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import Navbar from '../components/Navbar';
-import ContactAndFooter from '../components/ContactAndFooter';
+import Navbar from '../components/Navbar/Navbar';
+import ContactAndFooter from '../components/ContactAndFooter/ContactAndFooter';
 import { FaTelegram, FaThumbsUp } from 'react-icons/fa';
 
 interface User {
@@ -33,7 +33,7 @@ export default function Notes() {
 
     const fetchProfile = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/users/profile', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -116,7 +116,7 @@ export default function Notes() {
                       <span className="text-sm text-gray-500 ml-1">(including GST)</span>
                     </div>
                     <div className="flex items-center text-gray-500">
-                      {FaThumbsUp({ className: "mr-1" })}
+                      <FaThumbsUp className="mr-1" />
                       <span>471 likes</span>
                     </div>
                   </div>
@@ -144,7 +144,7 @@ export default function Notes() {
                       <span className="text-sm text-gray-500 ml-1">(including GST)</span>
                     </div>
                     <div className="flex items-center text-gray-500">
-                      {FaThumbsUp({ className: "mr-1" })}
+                      <FaThumbsUp className="mr-1" />
                       <span>69 likes</span>
                     </div>
                   </div>
@@ -168,7 +168,7 @@ export default function Notes() {
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-colors"
       >
-        {FaTelegram({ className: "text-2xl" })}
+        <FaTelegram className="text-2xl" />
       </a>
 
       <ContactAndFooter />

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import Navbar from '../components/Navbar';
-import ContactAndFooter from '../components/ContactAndFooter';
+import Navbar from '../components/Navbar/Navbar';
+import ContactAndFooter from '../components/ContactAndFooter/ContactAndFooter';
 import { FaTelegram, FaThumbsUp, FaChevronRight, FaPencilAlt } from 'react-icons/fa';
 import Link from 'next/link';
 import type { IconType } from 'react-icons';
