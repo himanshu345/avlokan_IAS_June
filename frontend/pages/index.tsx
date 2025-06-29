@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
-import Hero from '../components/Hero';
+import Navbar from '../components/Navbar/Navbar';
+import Hero from '../components/Hero/Hero';
 // Toppers section temporarily disabled
-// import Toppers from '../components/Toppers';
-import Features from '../components/Features';
-import EvaluationPlans from '../components/EvaluationPlans';
-import ProcessSection from '../components/ProcessSection';
-import SamplesAndFAQ from '../components/SamplesAndFAQ';
-import ContactAndFooter from '../components/ContactAndFooter';
+// import Toppers from '../components/Toppers/Toppers';
+import Features from '../components/Features/Features';
+import EvaluationPlans from '../components/EvaluationPlans/EvaluationPlans';
+import ProcessSection from '../components/ProcessSection/ProcessSection';
+import SamplesAndFAQ from '../components/SamplesAndFAQ/SamplesAndFAQ';
+import ContactAndFooter from '../components/ContactAndFooter/ContactAndFooter';
 import Head from 'next/head';
 
 interface User {
@@ -38,7 +38,7 @@ export default function Home() {
 
     const fetchProfile = async () => {
       try {
-        const res = await axios.get<ProfileResponse>('http://localhost:5000/api/users/profile', {
+        const res = await axios.get<ProfileResponse>(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

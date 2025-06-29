@@ -14,8 +14,23 @@ const path = require('path');
 // Initialize Express app
 const app = express();
 
-// Middleware
-app.use(cors());
+// CORS configuration for Vercel frontend and local dev
+const allowedOrigins = [
+  'https://your-frontend.vercel.app', // Replace with your actual Vercel frontend URL
+  'http://localhost:3000'
+];
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 // Serve uploads folder statically

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Navbar from '../components/Navbar';
-import PrelimsPanel from '../components/PrelimsPanel';
+import Navbar from '../components/Navbar/Navbar';
+import PrelimsPanel from '../components/PrelimsPanel/PrelimsPanel';
 
 export default function Prelims() {
   const [isPrelimsOpen, setIsPrelimsOpen] = useState(true);

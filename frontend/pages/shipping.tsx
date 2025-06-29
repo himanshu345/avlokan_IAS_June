@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
-import ContactAndFooter from '../components/ContactAndFooter';
+import Navbar from '../components/Navbar/Navbar';
+import ContactAndFooter from '../components/ContactAndFooter/ContactAndFooter';
 import Head from 'next/head';
 
 interface User {

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
-import ContactAndFooter from '../components/ContactAndFooter';
+import Navbar from '../components/Navbar/Navbar';
+import ContactAndFooter from '../components/ContactAndFooter/ContactAndFooter';
 import Head from 'next/head';
 
 interface User {
@@ -31,7 +31,7 @@ export default function Privacy() {
 
     const fetchProfile = async () => {
       try {
-        const res = await axios.get<ProfileResponse>('http://localhost:5000/api/users/profile', {
+        const res = await axios.get<ProfileResponse>(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

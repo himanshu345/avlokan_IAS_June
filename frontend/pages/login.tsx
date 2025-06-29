@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Navbar from '../components/Navbar/Navbar';
+import Footer from '../components/Footer/Footer';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 
@@ -34,7 +34,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post<LoginResponse>('http://localhost:5000/api/users/login', {
+      const res = await axios.post<LoginResponse>(`${process.env.NEXT_PUBLIC_API_URL}/api/users/login`, {
         email,
         password
       });
@@ -63,7 +63,7 @@ export default function Login() {
   const handleGoogleSuccess = async (credentialResponse: any) => {
     try {
       const decoded: any = jwtDecode(credentialResponse.credential);
-      const res = await axios.post<LoginResponse>('http://localhost:5000/api/users/google-auth', {
+      const res = await axios.post<LoginResponse>(`${process.env.NEXT_PUBLIC_API_URL}/api/users/google-auth`, {
         name: decoded.name,
         email: decoded.email,
         googleId: decoded.sub,

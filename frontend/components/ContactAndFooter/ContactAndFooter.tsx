@@ -190,7 +190,7 @@ export default function ContactAndFooter() {
           {/* Bottom Bar */}
           <div className="border-t border-gray-200 pt-8">
             <p className="text-center text-gray-600">
-              ©2025 - AvlokanIAS (FATFRUIT ANALYSIS & EVALUATION PRIVATE LIMITED). All rights reserved.
+              ©2025 - AvlokanIAS. All rights reserved. For queries: avlokanias.info@gmail.com | +91 7838724075
             </p>
           </div>
         </div>

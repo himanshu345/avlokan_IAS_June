@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import Navbar from '../components/Navbar';
-import ContactAndFooter from '../components/ContactAndFooter';
+import Navbar from '../components/Navbar/Navbar';
+import ContactAndFooter from '../components/ContactAndFooter/ContactAndFooter';
 import { FaTelegram, FaThumbsUp } from 'react-icons/fa';
 
 interface User {
@@ -33,7 +33,7 @@ export default function Notes() {
 
     const fetchProfile = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/users/profile', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

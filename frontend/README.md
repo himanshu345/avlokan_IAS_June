@@ -97,4 +97,46 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgments
 
 - This project is inspired by the avlokanias platform, which provides valuable services for IAS aspirants.
-- All design elements are created for educational purposes. 
+- All design elements are created for educational purposes.
+
+# Frontend Structure
+
+## Overview
+This frontend uses Next.js and is organized for scalability and maintainability. Below is the recommended structure after restructuring:
+
+```
+frontend/
+  components/         # Feature-based or domain-based React components
+    Hero/
+      HeroSection.tsx
+      HeroImage.tsx
+    Footer/
+      Footer.tsx
+    ...
+  features/           # (optional, for larger apps)
+  pages/              # Next.js pages
+  public/             # Static assets (images, icons, etc.)
+    images/
+    icons/
+  services/           # API and business logic
+  styles/             # Global styles
+  utils/              # Shared utility/helper functions
+  README.md           # This file
+```
+
+## Guidelines
+- **components/**: Group components by feature or domain for better scalability.
+- **public/**: All static assets are consolidated here. Use subfolders for organization.
+- **services/**: Place API calls and business logic here.
+- **utils/**: Place shared utility/helper functions here.
+- **styles/**: Global CSS and Tailwind configuration.
+
+## How to Add a New Feature
+1. Create a new folder in `components/` for the feature.
+2. Add related components inside this folder.
+3. Add any shared logic to `utils/`.
+4. Place static assets in `public/images/` or `public/icons/` as appropriate.
+
+---
+
+_Last updated: [DATE]_ 

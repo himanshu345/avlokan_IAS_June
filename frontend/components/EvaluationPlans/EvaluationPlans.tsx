@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
-import { initiatePayment } from '../services/payment';
+import { initiatePayment } from '../../services/payment';
 
 export interface Plan {
   title: string;
