@@ -16,8 +16,8 @@ const app = express();
 
 // CORS configuration for Vercel frontend and local dev
 const allowedOrigins = [
-  'https://your-frontend.vercel.app', // Replace with your actual Vercel frontend URL
-  'http://localhost:3000'
+  'https://avlokanias.com', // Production frontend domain
+  'http://localhost:3000'  // Local development
 ];
 app.use(cors({
   origin: function (origin, callback) {
@@ -31,6 +31,10 @@ app.use(cors({
   },
   credentials: true
 }));
+
+// Handle preflight requests for all routes
+app.options('*', cors());
+
 app.use(express.json());
 
 // Serve uploads folder statically
