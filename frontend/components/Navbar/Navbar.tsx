@@ -167,59 +167,46 @@ export default function Navbar({ user }: NavbarProps) {
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="md:hidden bg-white/95 shadow-2xl rounded-b-2xl border-t border-indigo-100 animate-fade-in-down">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              <Link href="/evaluation-plans" className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+          <div className="block lg:hidden bg-white/95 shadow-2xl rounded-b-2xl border-t border-indigo-100 animate-fade-in-down">
+            <div className="flex flex-col px-4 pt-4 pb-4 space-y-4">
+              <Link href="/evaluation-plans" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Evaluation Plans
               </Link>
-              <button
-                onClick={() => {
-                  setIsPrelimsOpen(true);
-                  setIsMenuOpen(false);
-                  router.push('/prelims');
-                }}
-                className="w-full text-left px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200"
-              >
+              <Link href="/prelims" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Prelims
-              </button>
-              <Link href="/csat" className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+              </Link>
+              <Link href="/csat" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 CSAT
               </Link>
-              <Link href="/notes" className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+              <Link href="/notes" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Notes
               </Link>
-              <Link href="/mentored-answer-writing" className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+              <Link href="/mentored-answer-writing" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 MAW
               </Link>
-              <Link href="/videos" className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+              <Link href="/videos" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Videos
               </Link>
-              <Link href="/contact" className="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+              <Link href="/contact" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Contact Us
               </Link>
-            </div>
-            <div className="pt-4 pb-3 border-t border-indigo-100">
-              {user ? (
-                <div className="space-y-1">
-                  <div className="block px-4 py-2 text-base font-semibold text-indigo-700">
-                    {user.name}
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-base font-semibold text-indigo-700 hover:text-indigo-900 hover:bg-indigo-50 rounded-lg transition-all duration-200"
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-1 px-2 pt-2 pb-3">
-                  <Link href="/login" className="block text-center w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:from-indigo-700 hover:to-purple-700 hover:shadow-xl transition-all duration-300">
+              {!user && (
+                <>
+                  <Link href="/login" className="block w-full text-center px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:from-indigo-700 hover:to-purple-700 hover:shadow-xl transition-all duration-300">
                     Login
                   </Link>
-                  <Link href="/register" className="block text-center w-full px-4 py-2 text-indigo-700 font-semibold rounded-xl hover:bg-indigo-50 transition-all duration-200">
+                  <Link href="/register" className="block w-full text-center px-4 py-3 text-indigo-700 font-semibold rounded-xl hover:bg-indigo-50 transition-all duration-200">
                     Register
                   </Link>
-                </div>
+                </>
+              )}
+              {user && (
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-3 text-base font-semibold text-indigo-700 hover:text-indigo-900 hover:bg-indigo-50 rounded-lg transition-all duration-200"
+                >
+                  Logout
+                </button>
               )}
             </div>
           </div>
