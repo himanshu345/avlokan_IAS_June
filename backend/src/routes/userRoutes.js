@@ -9,6 +9,8 @@ const {
   deleteUser,
   updateUserRole
 } = require('../controllers/userController');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 const router = express.Router();
 
@@ -16,10 +18,44 @@ const router = express.Router();
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 
-// Google Auth endpoint (placeholder)
-router.post('/google-auth', (req, res) => {
-  // TODO: Implement Google authentication logic
-  res.json({ message: 'Google auth endpoint placeholder' });
+// Google Auth endpoint (implementation)
+router.post('/google-auth', async (req, res) => {
+  const { email, name, googleId, picture } = req.body;
+
+  try {
+    // Find or create user
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        googleId,
+        profilePicture: picture || ''
+      });
+    } else if (!user.googleId) {
+      // Link Google ID if not already linked
+      user.googleId = googleId;
+      if (picture && !user.profilePicture) user.profilePicture = picture;
+      await user.save();
+    }
+
+    // Generate JWT
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+
+    res.json({
+      success: true,
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        profilePicture: user.profilePicture
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Google authentication failed', error: err.message });
+  }
 });
 
 // Protected routes
