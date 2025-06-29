@@ -71,7 +71,7 @@ const plans: Plans = {
         'Evaluation within 24 working hours',
         'Access to Question Bank'
       ],
-      price: 699,
+      price: 9,
       originalPrice: 1999,
       buttonText: 'Subscribe'
     },
