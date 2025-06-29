@@ -16,6 +16,12 @@ const router = express.Router();
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 
+// Google Auth endpoint (placeholder)
+router.post('/google-auth', (req, res) => {
+  // TODO: Implement Google authentication logic
+  res.json({ message: 'Google auth endpoint placeholder' });
+});
+
 // Protected routes
 router.get('/profile', protect, getUserProfile);
 router.put('/profile', protect, updateUserProfile);
