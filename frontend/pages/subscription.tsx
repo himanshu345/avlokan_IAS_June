@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Navbar from '../components/Navbar/Navbar';
+import Footer from '../components/Footer/Footer';
 
 const Subscription = () => {
   const router = useRouter();
@@ -94,7 +94,7 @@ const Subscription = () => {
         'Personalized study plan',
         'One-on-one mentorship sessions',
         'Mock interview preparation',
-        'Exclusive toppers' strategy sessions',
+        "Exclusive toppers' strategy sessions",
         'Direct access to UPSC experts',
         'Personalized feedback on essays',
       ],
