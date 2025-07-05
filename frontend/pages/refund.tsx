@@ -91,9 +91,24 @@ export default function Refund() {
             <p>
               To complete your refund process, we require a receipt or proof of purchase.
             </p>
+            <p>
+              Late or missing refunds (if applicable)
+            </p>
+            <p>
+              If you haven't received a refund yet, first check your bank account again.
+            </p>
+            <p>
+              Then contact your credit card company, it may take some time before your refund is officially posted.
+            </p>
+            <p>
+              Next, contact your bank. There is often some processing time before a refund is posted.
+            </p>
+            <p>
+              If you have done all of this and you still have not received your refund yet, please contact us at avlokanias.info@gmail.com
+            </p>
           </div>
         </section>
-
+{/* 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Late or missing refunds (if applicable)</h2>
           <div className="prose prose-lg">
@@ -110,7 +125,7 @@ export default function Refund() {
               If you have done all of this and you still have not received your refund yet, please contact us at info@avlokanias.com
             </p>
           </div>
-        </section>
+        </section> */}
       </main>
       <ContactAndFooter />
     </div>

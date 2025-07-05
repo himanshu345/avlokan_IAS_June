@@ -79,73 +79,10 @@ export default function MentoredAnswerWriting() {
         </div>
       </div>
 
-      <div className="min-h-screen bg-gray-50">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Mobile Menu Button */}
-            <button 
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden flex items-center justify-between w-full bg-white p-4 rounded-lg shadow-sm mb-4"
-            >
-              <span className="font-medium">Mentored Answer Writing</span>
-            </button>
-
-            {/* Left Sidebar */}
-            <div className={`lg:w-1/4 ${isMobileMenuOpen ? 'block' : 'hidden'} lg:block`}>
-              <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Mentored Answer Writing</h2>
-                <nav className="space-y-2">
-                  <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition-colors flex items-center justify-between">
-                    Mentored Answer Writing
-                  </a>
-                  <a href="#" className="block px-4 py-2 bg-purple-600 text-white rounded-md font-medium flex items-center justify-between">
-                    CAWG
-                  </a>
-                  <a href="#" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-md transition-colors flex items-center justify-between">
-                    My Sessions
-                  </a>
-                </nav>
-              </div>
-            </div>
-
-            {/* Main Content - Added margin-top to account for fixed navbar */}
-            <div className="lg:w-3/4 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-16">
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-purple-100 p-3 rounded-lg">
-                    <FaPencilAlt className="text-purple-600 text-xl" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-1">CAWG - 19th May</h3>
-                    <p className="text-gray-600 mb-2">avlokanias Answer Writing Group (CAWG)</p>
-                    <a href="#" className="text-purple-600 hover:text-purple-700 text-sm font-medium">
-                      View Course
-                    </a>
-                  </div>
-                </div>
-
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <span className="text-2xl font-bold text-gray-900">₹1,499</span>
-                      <span className="text-gray-500 line-through ml-2">₹3,999</span>
-                      <span className="text-sm text-gray-500 ml-1">(including GST)</span>
-                    </div>
-                    <div className="flex items-center text-purple-600">
-                      <FaThumbsUp className="mr-1" />
-                      <span>93 likes</span>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={() => router.push('/evaluation-plans')}
-                    className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition-colors"
-                  >
-                    View Details & Subscribe
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Coming Soon!</h1>
+          <p className="text-xl text-gray-600">We will be launching MAW course soon</p>
         </div>
       </div>
 

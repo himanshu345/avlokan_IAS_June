@@ -71,7 +71,7 @@ const plans: Plans = {
         'Evaluation within 24 working hours',
         'Access to Question Bank'
       ],
-      price: 9,
+      price: 699,
       originalPrice: 1999,
       buttonText: 'Subscribe'
     },
@@ -182,7 +182,7 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
         
         {/* Tab Selector */}
         <div className="flex justify-center space-x-8 mb-12">
-          {['gs', 'optional', 'combo'].map((tab) => (
+          {/* {['gs', 'optional', 'combo'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab as PlanCategory)}
@@ -194,7 +194,13 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
             >
               {tab.toUpperCase()}
             </button>
-          ))}
+          ))} */}
+          <button
+            onClick={() => setActiveTab('gs')}
+            className="text-lg font-medium pb-2 transition-colors text-purple-600 border-b-2 border-purple-600"
+          >
+            Evaluation Plans
+          </button>
         </div>
 
         {/* Pricing Cards */}

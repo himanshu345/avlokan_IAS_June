@@ -63,7 +63,7 @@ interface PrelimsPanelProps {
 }
 
 export default function PrelimsPanel({ isOpen, onClose }: PrelimsPanelProps) {
-  const [selectedModule, setSelectedModule] = useState(prelimsModules[0]);
+  // const [selectedModule, setSelectedModule] = useState(prelimsModules[0]);
 
   return (
     <AnimatePresence>
@@ -100,7 +100,7 @@ export default function PrelimsPanel({ isOpen, onClose }: PrelimsPanelProps) {
             {/* Content */}
             <div className="flex h-[calc(100vh-64px)]">
               {/* Left Sidebar */}
-              <div className="w-64 border-r bg-gray-50 p-4 overflow-y-auto">
+              {/* <div className="w-64 border-r bg-gray-50 p-4 overflow-y-auto">
                 <nav className="space-y-1">
                   {prelimsModules.map((module) => (
                     <button
@@ -119,11 +119,12 @@ export default function PrelimsPanel({ isOpen, onClose }: PrelimsPanelProps) {
                     </button>
                   ))}
                 </nav>
-              </div>
+              </div> */}
 
               {/* Right Panel */}
-              <div className="flex-1 p-6 overflow-y-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="flex-1 p-6 overflow-y-auto flex items-center justify-center">
+                {/* TODO: We will be soon launching course */}
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {prelimsData[selectedModule].map((offer, index) => (
                     <motion.div
                       key={offer.title}
@@ -161,6 +162,11 @@ export default function PrelimsPanel({ isOpen, onClose }: PrelimsPanelProps) {
                       </div>
                     </motion.div>
                   ))}
+                </div> */}
+                
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Coming Soon!</h3>
+                  <p className="text-lg text-gray-600">We will be launching course soon</p>
                 </div>
               </div>
             </div>

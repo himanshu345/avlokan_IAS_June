@@ -90,7 +90,7 @@ export default function Navbar({ user }: NavbarProps) {
                 <Link href="/mentored-answer-writing">
                   <div className="text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">MAW</div>
                 </Link>
-                <div className="relative group">
+                {/* <div className="relative group">
                   <button className="flex items-center space-x-1 text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">
                     <span>Videos</span>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,7 +108,7 @@ export default function Navbar({ user }: NavbarProps) {
                       <div className="block px-4 py-2 text-gray-700 hover:bg-indigo-50 rounded-lg transition">Strategy Sessions</div>
                     </Link>
                   </div>
-                </div>
+                </div> */}
                 <Link href="/contact">
                   <div className="text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">Contact Us</div>
                 </Link>
@@ -184,9 +184,9 @@ export default function Navbar({ user }: NavbarProps) {
               <Link href="/mentored-answer-writing" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 MAW
               </Link>
-              <Link href="/videos" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+              {/* <Link href="/videos" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Videos
-              </Link>
+              </Link> */}
               <Link href="/contact" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Contact Us
               </Link>

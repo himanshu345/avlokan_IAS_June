@@ -46,10 +46,14 @@ export default function SamplesAndFAQ() {
           <p className="text-lg mb-10">Click on the PDF to check out sample evaluations</p>
 
           <div className="flex justify-center gap-6 flex-wrap px-4">
-            {[1, 2, 3].map((num) => (
+            {[
+              { name: 'Sample PDF1', file: 'Sample PDF1.pdf' },
+              { name: 'Sample PDF2', file: 'Sample PDF2.pdf' },
+              { name: 'Sample PDF3', file: 'Sample PDF3.pdf' }
+            ].map((sample, index) => (
               <motion.a
-                key={num}
-                href={`/pdf/sample${num}.pdf`}
+                key={index}
+                href={`/samples/${sample.file}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center transition-transform transform hover:scale-105"
@@ -65,7 +69,7 @@ export default function SamplesAndFAQ() {
                     className="mb-4"
                   />
                 </div>
-                <span className="border border-white px-4 py-1 rounded text-sm">Sample {num}</span>
+                <span className="border border-white px-4 py-1 rounded text-sm">{sample.name}</span>
               </motion.a>
             ))}
           </div>
