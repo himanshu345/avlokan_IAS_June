@@ -66,7 +66,7 @@ export default function Navbar({ user }: NavbarProps) {
                     <span>Evaluation Plans</span>
                   </div>
                 </Link>
-                <div className="relative group">
+                {/* <div className="relative group">
                   <button
                     onClick={() => {
                       setIsPrelimsOpen(true);
@@ -80,16 +80,16 @@ export default function Navbar({ user }: NavbarProps) {
                     </div>
                     <span>Prelims</span>
                   </button>
-                </div>
-                <Link href="/csat">
+                </div> */}
+                {/* <Link href="/csat">
                   <div className="text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">CSAT</div>
-                </Link>
-                <Link href="/notes">
+                </Link> */}
+                {/* <Link href="/notes">
                   <div className="text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">Notes</div>
-                </Link>
-                <Link href="/mentored-answer-writing">
+                </Link> */}
+                {/* <Link href="/mentored-answer-writing">
                   <div className="text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">MAW</div>
-                </Link>
+                </Link> */}
                 {/* <div className="relative group">
                   <button className="flex items-center space-x-1 text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">
                     <span>Videos</span>
@@ -172,18 +172,18 @@ export default function Navbar({ user }: NavbarProps) {
               <Link href="/evaluation-plans" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Evaluation Plans
               </Link>
-              <Link href="/prelims" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+              {/* <Link href="/prelims" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Prelims
-              </Link>
-              <Link href="/csat" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+              </Link> */}
+              {/* <Link href="/csat" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 CSAT
-              </Link>
-              <Link href="/notes" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+              </Link> */}
+              {/* <Link href="/notes" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Notes
-              </Link>
-              <Link href="/mentored-answer-writing" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+              </Link> */}
+              {/* <Link href="/mentored-answer-writing" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 MAW
-              </Link>
+              </Link> */}
               {/* <Link href="/videos" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Videos
               </Link> */}

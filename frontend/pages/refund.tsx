@@ -74,8 +74,7 @@ export default function Refund() {
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Full Refund</h2>
           <div className="prose prose-lg">
             <p>
-              Our policy lasts 2 days. If 2 days have gone by since your purchase, unfortunately, we can't offer you a full refund.
-            </p>
+              Our policy lasts 2 days. If 2 days have gone by since your purchase, unfortunately, we can't offer you a full refund. If the refund is initiated within 2 days of subscription commencement, we will initiate the refund within next 5 working days.         </p>
             <p>
               To be eligible for a full refund, your Subscription should not have been utilized. (i.e., you should not have submitted single question for the evaluation)
             </p>
