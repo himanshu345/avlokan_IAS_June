@@ -47,10 +47,12 @@ export default function Dashboard() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const fetchSubmissions = async (userObj = user) => {
     if (userObj && userObj.role === 'admin') {
       const token = localStorage.getItem('token');
-      const res = await axios.get<SubmissionsApiResponse>('http://localhost:5000/api/evaluations', {
+      const res = await axios.get<SubmissionsApiResponse>(`${API_URL}/api/evaluations`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success) {
@@ -68,7 +70,7 @@ export default function Dashboard() {
 
     const fetchUserProfile = async () => {
       try {
-        const res = await axios.get<ProfileResponse>('http://localhost:5000/api/users/profile', {
+        const res = await axios.get<ProfileResponse>(`${API_URL}/api/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -156,14 +158,14 @@ export default function Dashboard() {
                       <td className="border px-4 py-2">{sub.status}</td>
                       <td className="border px-4 py-2">
                         {sub.fileAttachments && sub.fileAttachments.length > 0 ? (
-                          <a href={`http://localhost:5000${sub.fileAttachments[0].path}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline" download>
+                          <a href={`${API_URL}${sub.fileAttachments[0].path}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline" download>
                             Download
                           </a>
                         ) : 'N/A'}
                       </td>
                       <td className="border px-4 py-2">
                         {sub.evaluation?.evaluatedPdf?.path ? (
-                          <a href={`http://localhost:5000${sub.evaluation.evaluatedPdf.path}`} target="_blank" rel="noopener noreferrer" className="text-green-600 underline">View</a>
+                          <a href={`${API_URL}${sub.evaluation.evaluatedPdf.path}`} target="_blank" rel="noopener noreferrer" className="text-green-600 underline">View</a>
                         ) : 'Not Uploaded'}
                       </td>
                       <td className="border px-4 py-2">
@@ -179,7 +181,7 @@ export default function Dashboard() {
                             if (!evaluationId) {
                               try {
                                 const evalRes = await axios.post<EvaluationCreateResponse>(
-                                  `http://localhost:5000/api/evaluations/evaluate/${sub._id}`,
+                                  `${API_URL}/api/evaluations/evaluate/${sub._id}`,
                                   {
                                     scores: {
                                       understanding: 5,
@@ -211,7 +213,7 @@ export default function Dashboard() {
                               }
                             }
                             await axios.post(
-                              `http://localhost:5000/api/evaluations/evaluate/${evaluationId}/evaluated-pdf`,
+                              `${API_URL}/api/evaluations/evaluate/${evaluationId}/evaluated-pdf`,
                               formData,
                               { headers: { Authorization: `Bearer ${token}` } }
                             );

@@ -22,6 +22,8 @@ export default function Shipping() {
   const [error, setError] = useState('');
   const [user, setUser] = useState<User | null>(null);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -31,7 +33,7 @@ export default function Shipping() {
 
     const fetchProfile = async () => {
       try {
-        const res = await axios.get<ProfileResponse>('http://localhost:5000/api/users/profile', {
+        const res = await axios.get<ProfileResponse>(`${API_URL}/api/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

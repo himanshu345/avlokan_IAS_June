@@ -28,6 +28,8 @@ export default function Resources() {
   const [error, setError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -37,7 +39,7 @@ export default function Resources() {
 
     const fetchResources = async () => {
       try {
-        const res = await axios.get<ResourcesResponse>('http://localhost:5000/api/resources', {
+        const res = await axios.get<ResourcesResponse>(`${API_URL}/api/resources`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

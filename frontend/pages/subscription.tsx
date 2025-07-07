@@ -8,6 +8,7 @@ const Subscription = () => {
   const [isAnnual, setIsAnnual] = useState(true);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -21,7 +22,7 @@ const Subscription = () => {
     // Fetch user profile
     const fetchProfile = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/users/profile', {
+        const res = await fetch(`${API_URL}/api/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

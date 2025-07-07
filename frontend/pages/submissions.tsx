@@ -38,6 +38,7 @@ export default function Submissions() {
   const [subject, setSubject] = useState('');
   const [user, setUser] = useState(null);
   const [profileLoading, setProfileLoading] = useState(true);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -47,7 +48,7 @@ export default function Submissions() {
     }
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`, {
+        const res = await fetch(`${API_URL}/api/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -74,7 +75,7 @@ export default function Submissions() {
 
     const fetchSubmissions = async () => {
       try {
-        const res = await axios.get<SubmissionsResponse>('http://localhost:5000/api/evaluations/my-submissions', {
+        const res = await axios.get<SubmissionsResponse>(`${API_URL}/api/evaluations/my-submissions`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -133,7 +134,7 @@ export default function Submissions() {
     formData.append('pdf', file);
     formData.append('subject', subject);
     try {
-      const res = await axios.post('http://localhost:5000/api/evaluations/submit-answer', formData, {
+      const res = await axios.post(`${API_URL}/api/evaluations/submit-answer`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
@@ -146,7 +147,7 @@ export default function Submissions() {
         // Refresh submissions list
         setLoading(true);
         try {
-          const submissionsRes = await axios.get<SubmissionsResponse>('http://localhost:5000/api/evaluations/my-submissions', {
+          const submissionsRes = await axios.get<SubmissionsResponse>(`${API_URL}/api/evaluations/my-submissions`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (submissionsRes.data.success) {
@@ -297,7 +298,7 @@ export default function Submissions() {
                     {/* Evaluated PDF link */}
                     {submission.evaluation?.evaluatedPdf?.path && (
                       <a
-                        href={`http://localhost:5000${submission.evaluation.evaluatedPdf.path}`}
+                        href={`${API_URL}${submission.evaluation.evaluatedPdf.path}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-green-600 underline ml-4"

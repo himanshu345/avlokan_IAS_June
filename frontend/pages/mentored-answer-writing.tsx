@@ -26,6 +26,8 @@ export default function MentoredAnswerWriting() {
   const [loading, setLoading] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -35,7 +37,7 @@ export default function MentoredAnswerWriting() {
 
     const fetchProfile = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/users/profile', {
+        const res = await fetch(`${API_URL}/api/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

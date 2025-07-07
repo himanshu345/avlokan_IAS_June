@@ -21,6 +21,8 @@ export default function Evaluations() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -30,7 +32,7 @@ export default function Evaluations() {
 
     const fetchEvaluationStats = async () => {
       try {
-        const res = await axios.get<EvaluationStatsResponse>('http://localhost:5000/api/evaluations/stats', {
+        const res = await axios.get<EvaluationStatsResponse>(`${API_URL}/api/evaluations/stats`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
