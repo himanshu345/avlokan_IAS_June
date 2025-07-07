@@ -29,6 +29,11 @@ interface Submission {
   };
 }
 
+interface SubmissionsApiResponse {
+  success: boolean;
+  submissions: Submission[];
+}
+
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -40,7 +45,7 @@ export default function Dashboard() {
   const fetchSubmissions = async (userObj = user) => {
     if (userObj && userObj.role === 'admin') {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/evaluations', {
+      const res = await axios.get<SubmissionsApiResponse>('http://localhost:5000/api/evaluations', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success) {
