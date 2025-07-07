@@ -80,6 +80,16 @@ const evaluationSchema = new mongoose.Schema({
   },
   revisionNotes: {
     type: String
+  },
+  evaluatedPdf: {
+    filename: String,
+    path: String,
+    mimetype: String,
+    size: Number,
+    uploadDate: {
+      type: Date,
+      default: Date.now
+    }
   }
 }, {
   timestamps: true

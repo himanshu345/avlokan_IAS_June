@@ -12,6 +12,7 @@ const {
 } = require('../controllers/evaluationController');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const evaluatedPdfUpload = multer({ dest: 'uploads/evaluated-pdfs/' });
 
 const router = express.Router();
 
@@ -25,6 +26,7 @@ router.get('/stats', protect, getEvaluationStats);
 router.get('/pending', protect, evaluator, getPendingSubmissions);
 router.post('/evaluate/:id', protect, evaluator, submitEvaluation);
 router.put('/evaluate/:id', protect, evaluator, updateEvaluation);
+router.post('/evaluate/:id/evaluated-pdf', protect, evaluator, evaluatedPdfUpload.single('evaluatedPdf'), require('../controllers/evaluationController').uploadEvaluatedPdf);
 
 // Admin route to get all submissions
 router.get('/', protect, admin, getAllSubmissions);

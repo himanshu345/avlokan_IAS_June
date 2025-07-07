@@ -114,7 +114,7 @@ const getMySubmissions = async (req, res) => {
       .limit(parseInt(limit))
       .populate({
         path: 'evaluation',
-        select: 'totalScore evaluationDate status feedback'
+        select: 'totalScore evaluationDate status feedback evaluatedPdf'
       });
     
     // Get total count for pagination
@@ -477,6 +477,35 @@ const getAllSubmissions = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Upload evaluated PDF for an evaluation
+ * @route   POST /api/evaluations/:id/evaluated-pdf
+ * @access  Evaluator/Admin
+ */
+const uploadEvaluatedPdf = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+    const evaluation = await Evaluation.findById(req.params.id);
+    if (!evaluation) {
+      return res.status(404).json({ success: false, message: 'Evaluation not found' });
+    }
+    evaluation.evaluatedPdf = {
+      filename: req.file.filename,
+      path: `/uploads/evaluated-pdfs/${req.file.filename}`,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      uploadDate: new Date()
+    };
+    await evaluation.save();
+    res.json({ success: true, evaluatedPdf: evaluation.evaluatedPdf });
+  } catch (error) {
+    console.error('Error in uploadEvaluatedPdf:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+};
+
 module.exports = {
   submitAnswer,
   getMySubmissions,
@@ -485,5 +514,6 @@ module.exports = {
   submitEvaluation,
   updateEvaluation,
   getEvaluationStats,
-  getAllSubmissions
+  getAllSubmissions,
+  uploadEvaluatedPdf
 }; 

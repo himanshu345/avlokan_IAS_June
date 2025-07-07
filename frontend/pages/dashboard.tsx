@@ -17,11 +17,37 @@ interface ProfileResponse {
   message?: string;
 }
 
+interface Submission {
+  _id: string;
+  user: { _id: string; name: string; email: string };
+  subject: string;
+  status: string;
+  fileAttachments: { filename: string; path: string }[];
+  evaluation?: {
+    _id: string;
+    evaluatedPdf?: { path: string };
+  };
+}
+
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const fetchSubmissions = async (userObj = user) => {
+    if (userObj && userObj.role === 'admin') {
+      const token = localStorage.getItem('token');
+      const res = await axios.get('http://localhost:5000/api/evaluations', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.data.success) {
+        setSubmissions(res.data.submissions);
+      }
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -40,6 +66,10 @@ export default function Dashboard() {
 
         if (res.data.success) {
           setUser(res.data.user);
+          if (res.data.user.role === 'admin') {
+            setIsAdmin(true);
+            fetchSubmissions(res.data.user);
+          }
         }
       } catch (err: any) {
         setError(err.response?.data?.message || 'Failed to fetch user profile');
@@ -89,26 +119,117 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
-            </div>
-            <div className="flex items-center">
-              <span className="text-gray-700 mr-4">Welcome, {user?.name}</span>
-              <button
-                onClick={handleLogout}
-                className="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700"
-              >
-                Logout
-              </button>
+      <Navbar user={user} />
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 pt-24">
+        {isAdmin && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-4">All User Submissions</h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white rounded shadow">
+                <thead>
+                  <tr>
+                    <th className="px-4 py-2">User</th>
+                    <th className="px-4 py-2">Email</th>
+                    <th className="px-4 py-2">Subject</th>
+                    <th className="px-4 py-2">Status</th>
+                    <th className="px-4 py-2">Submitted PDF</th>
+                    <th className="px-4 py-2">Evaluated PDF</th>
+                    <th className="px-4 py-2">Upload Evaluated PDF</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {submissions.map((sub) => (
+                    <tr key={sub._id}>
+                      <td className="border px-4 py-2">{sub.user?.name}</td>
+                      <td className="border px-4 py-2">{sub.user?.email}</td>
+                      <td className="border px-4 py-2">{sub.subject}</td>
+                      <td className="border px-4 py-2">{sub.status}</td>
+                      <td className="border px-4 py-2">
+                        {sub.fileAttachments && sub.fileAttachments.length > 0 ? (
+                          <a href={`http://localhost:5000${sub.fileAttachments[0].path}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline" download>
+                            Download
+                          </a>
+                        ) : 'N/A'}
+                      </td>
+                      <td className="border px-4 py-2">
+                        {sub.evaluation?.evaluatedPdf?.path ? (
+                          <a href={`http://localhost:5000${sub.evaluation.evaluatedPdf.path}`} target="_blank" rel="noopener noreferrer" className="text-green-600 underline">View</a>
+                        ) : 'Not Uploaded'}
+                      </td>
+                      <td className="border px-4 py-2">
+                        <form
+                          onSubmit={async (e) => {
+                            e.preventDefault();
+                            const file = (e.target as any).elements.evaluatedPdf.files[0];
+                            if (!file) return alert('Select a PDF');
+                            const formData = new FormData();
+                            formData.append('evaluatedPdf', file);
+                            const token = localStorage.getItem('token');
+                            let evaluationId = sub.evaluation?._id;
+                            if (!evaluationId) {
+                              try {
+                                const evalRes = await axios.post(
+                                  `http://localhost:5000/api/evaluations/evaluate/${sub._id}`,
+                                  {
+                                    scores: {
+                                      understanding: 5,
+                                      structure: 5,
+                                      relevance: 5,
+                                      language: 5,
+                                      examples: 5
+                                    },
+                                    totalScore: 25,
+                                    feedback: {
+                                      general: 'Evaluated PDF uploaded.',
+                                      strengths: [],
+                                      areasForImprovement: [],
+                                      specificComments: []
+                                    },
+                                    status: 'completed'
+                                  },
+                                  { headers: { Authorization: `Bearer ${token}` } }
+                                );
+                                if (evalRes.data && evalRes.data.evaluation && evalRes.data.evaluation._id) {
+                                  evaluationId = evalRes.data.evaluation._id;
+                                } else {
+                                  alert('Failed to create evaluation');
+                                  return;
+                                }
+                              } catch (err) {
+                                alert('Failed to create evaluation');
+                                return;
+                              }
+                            }
+                            await axios.post(
+                              `http://localhost:5000/api/evaluations/evaluate/${evaluationId}/evaluated-pdf`,
+                              formData,
+                              { headers: { Authorization: `Bearer ${token}` } }
+                            );
+                            alert('Evaluated PDF uploaded!');
+                            fetchSubmissions();
+                          }}
+                        >
+                          <input
+                            type="file"
+                            name="evaluatedPdf"
+                            accept="application/pdf"
+                            className="mb-2"
+                          />
+                          <button
+                            type="submit"
+                            className="bg-indigo-600 text-white px-3 py-1 rounded"
+                          >
+                            Upload
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
-                </div>
-      </nav>
-
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        )}
         <div className="px-4 py-6 sm:px-0">
           <div className="bg-white shadow rounded-lg p-6">
             <h2 className="text-lg font-medium text-gray-900 mb-4">Your Profile</h2>

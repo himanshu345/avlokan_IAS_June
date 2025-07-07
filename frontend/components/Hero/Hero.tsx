@@ -24,7 +24,7 @@ export default function Hero() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-                onClick={() => router.push('/register')}
+                onClick={() => router.push('/submissions')}
                 className="px-8 py-4 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-300"
               >
                 Start For Free

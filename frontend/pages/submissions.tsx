@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import Navbar from '../components/Navbar/Navbar';
+import Head from 'next/head';
 
 interface Submission {
   _id: string;
@@ -11,6 +13,11 @@ interface Submission {
   score?: number;
   feedback?: string;
   submissionDate: string;
+  evaluation?: {
+    evaluatedPdf?: {
+      path: string;
+    };
+  };
 }
 
 interface SubmissionsResponse {
@@ -29,6 +36,34 @@ export default function Submissions() {
   const [uploadMessage, setUploadMessage] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [subject, setSubject] = useState('');
+  const [user, setUser] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+    fetchProfile();
+  }, [router]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -142,13 +177,10 @@ export default function Submissions() {
     }
   };
 
-  if (loading) {
+  if (loading || profileLoading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
       </div>
     );
   }
@@ -171,34 +203,15 @@ export default function Submissions() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-900">My Submissions</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="text-gray-700 hover:text-gray-900"
-              >
-                Dashboard
-              </button>
-              <button
-                onClick={handleLogout}
-                className="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <Head>
+        <title>My Evaluations - AvlokanIAS</title>
+      </Head>
+      <Navbar user={user} />
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 pt-24">
         <div className="px-4 py-6 sm:px-0">
           {/* PDF Upload Form */}
           <div className="mb-8 bg-white p-6 rounded-lg shadow max-w-2xl mx-auto">
+            <div className="text-center text-indigo-700 font-semibold text-lg mb-2">Get two of your answers evaluated for free</div>
             <h2 className="text-lg font-semibold mb-4 text-center">Submit Your Answer as PDF</h2>
             <form onSubmit={handlePDFUpload} className="space-y-4">
               <div className="grid grid-cols-1 gap-4">
@@ -281,18 +294,16 @@ export default function Submissions() {
                     <span className="text-sm text-gray-500">
                       Submitted on {new Date(submission.submissionDate).toLocaleDateString()}
                     </span>
-                    {submission.status === 'evaluated' && (
-                      <div className="flex items-center space-x-4">
-                        <span className="text-sm font-medium text-gray-900">
-                          Score: {submission.score}/10
-                        </span>
-                        <button
-                          onClick={() => {/* TODO: Show feedback modal */}}
-                          className="text-indigo-600 hover:text-indigo-700 font-medium"
-                        >
-                          View Feedback
-                        </button>
-                      </div>
+                    {/* Evaluated PDF link */}
+                    {submission.evaluation?.evaluatedPdf?.path && (
+                      <a
+                        href={`http://localhost:5000${submission.evaluation.evaluatedPdf.path}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-green-600 underline ml-4"
+                      >
+                        View Evaluated PDF
+                      </a>
                     )}
                   </div>
                 </div>

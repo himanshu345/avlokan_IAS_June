@@ -280,6 +280,31 @@ const updateUserRole = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Upload user profile picture
+ * @route   POST /api/users/profile-picture
+ * @access  Private
+ */
+const uploadProfilePicture = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    // Save relative path or URL
+    const profilePicturePath = `/uploads/profile-pictures/${req.file.filename}`;
+    user.profilePicture = profilePicturePath;
+    await user.save();
+    res.json({ success: true, profilePicture: profilePicturePath });
+  } catch (error) {
+    console.error('Error in uploadProfilePicture:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -287,5 +312,6 @@ module.exports = {
   updateUserProfile,
   getUsers,
   deleteUser,
-  updateUserRole
+  updateUserRole,
+  uploadProfilePicture
 }; 

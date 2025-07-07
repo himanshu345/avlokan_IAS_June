@@ -109,8 +109,14 @@ export default function Navbar({ user }: NavbarProps) {
                     </Link>
                   </div>
                 </div> */}
+                <Link href="/submissions">
+                  <div className="text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">My Evaluations</div>
+                </Link>
                 <Link href="/contact">
                   <div className="text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">Contact Us</div>
+                </Link>
+                <Link href="/dashboard">
+                  <div className="text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">Dashboard</div>
                 </Link>
               </div>
             </div>
@@ -147,7 +153,9 @@ export default function Navbar({ user }: NavbarProps) {
               <div className="hidden lg:flex items-center ml-8">
                 {user ? (
                   <div className="flex items-center space-x-4 bg-white/80 px-4 py-2 rounded-xl shadow border border-gray-100">
-                    <span className="text-gray-700 font-semibold">{user.name}</span>
+                    <Link href="/profile">
+                      <span className="text-gray-700 font-semibold cursor-pointer hover:underline">{user.name}</span>
+                    </Link>
                     <button
                       onClick={handleLogout}
                       className="px-4 py-2 border border-indigo-300 rounded-lg text-indigo-700 font-semibold hover:bg-indigo-50 hover:text-indigo-900 transition-all duration-200 shadow-sm"
@@ -187,8 +195,14 @@ export default function Navbar({ user }: NavbarProps) {
               {/* <Link href="/videos" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Videos
               </Link> */}
+              <Link href="/submissions" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+                My Evaluations
+              </Link>
               <Link href="/contact" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Contact Us
+              </Link>
+              <Link href="/dashboard" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+                Dashboard
               </Link>
               {!user && (
                 <>

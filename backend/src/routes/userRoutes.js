@@ -7,12 +7,27 @@ const {
   updateUserProfile,
   getUsers,
   deleteUser,
-  updateUserRole
+  updateUserRole,
+  uploadProfilePicture
 } = require('../controllers/userController');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const multer = require('multer');
+const path = require('path');
 
 const router = express.Router();
+
+const upload = multer({
+  dest: path.join(__dirname, '../../uploads/profile-pictures'),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'));
+    }
+  }
+});
 
 // Public routes
 router.post('/register', registerUser);
@@ -61,6 +76,7 @@ router.post('/google-auth', async (req, res) => {
 // Protected routes
 router.get('/profile', protect, getUserProfile);
 router.put('/profile', protect, updateUserProfile);
+router.post('/profile-picture', protect, upload.single('profilePicture'), uploadProfilePicture);
 
 // Admin routes
 router.get('/', protect, admin, getUsers);
