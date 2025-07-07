@@ -34,6 +34,11 @@ interface SubmissionsApiResponse {
   submissions: Submission[];
 }
 
+interface EvaluationCreateResponse {
+  evaluation: { _id: string };
+  [key: string]: any;
+}
+
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -173,7 +178,7 @@ export default function Dashboard() {
                             let evaluationId = sub.evaluation?._id;
                             if (!evaluationId) {
                               try {
-                                const evalRes = await axios.post(
+                                const evalRes = await axios.post<EvaluationCreateResponse>(
                                   `http://localhost:5000/api/evaluations/evaluate/${sub._id}`,
                                   {
                                     scores: {
