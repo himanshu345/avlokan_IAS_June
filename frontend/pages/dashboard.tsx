@@ -124,7 +124,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar user={user} />
+      <Navbar user={user ? { id: (user as any)._id, name: user.name, email: user.email, role: user.role } : null} />
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 pt-24">
         {isAdmin && (
           <div className="mb-8">
