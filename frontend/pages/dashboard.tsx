@@ -158,14 +158,14 @@ export default function Dashboard() {
                       <td className="border px-4 py-2">{sub.status}</td>
                       <td className="border px-4 py-2">
                         {sub.fileAttachments && sub.fileAttachments.length > 0 ? (
-                          <a href={`${API_URL}${sub.fileAttachments[0].path}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline" download>
+                          <a href={`${API_URL?.replace(/\/$/, '')}/${sub.fileAttachments[0].path?.replace(/^\//, '')}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline" download>
                             Download
                           </a>
                         ) : 'N/A'}
                       </td>
                       <td className="border px-4 py-2">
                         {sub.evaluation?.evaluatedPdf?.path ? (
-                          <a href={`${API_URL}${sub.evaluation.evaluatedPdf.path}`} target="_blank" rel="noopener noreferrer" className="text-green-600 underline">View</a>
+                          <a href={`${API_URL?.replace(/\/$/, '')}/${sub.evaluation.evaluatedPdf.path?.replace(/^\//, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-600 underline">View</a>
                         ) : 'Not Uploaded'}
                       </td>
                       <td className="border px-4 py-2">
