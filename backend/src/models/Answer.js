@@ -47,6 +47,7 @@ const answerSchema = new mongoose.Schema({
   },
   fileAttachments: [{
     filename: String,
+    originalname: String,
     path: String,
     mimetype: String,
     size: Number,
