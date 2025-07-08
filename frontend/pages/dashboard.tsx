@@ -22,7 +22,7 @@ interface Submission {
   user: { _id: string; name: string; email: string };
   subject: string;
   status: string;
-  fileAttachments: { filename: string; path: string }[];
+  fileAttachments: { filename: string; path: string; originalname?: string }[];
   evaluation?: {
     _id: string;
     evaluatedPdf?: { path: string };
@@ -158,7 +158,7 @@ export default function Dashboard() {
                       <td className="border px-4 py-2">{sub.status}</td>
                       <td className="border px-4 py-2">
                         {sub.fileAttachments && sub.fileAttachments.length > 0 ? (
-                          <a href={`${API_URL?.replace(/\/$/, '')}/${sub.fileAttachments[0].path?.replace(/^\//, '')}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline" download>
+                          <a href={`${API_URL?.replace(/\/$/, '')}/${sub.fileAttachments[0].path?.replace(/^\//, '')}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline" download={sub.fileAttachments[0].originalname || 'submission.pdf'}>
                             Download
                           </a>
                         ) : 'N/A'}
