@@ -16,6 +16,12 @@ interface EvaluationStatsResponse {
   message?: string;
 }
 
+interface SubmissionsApiResponse {
+  success: boolean;
+  submissions: any[];
+  message?: string;
+}
+
 export default function Evaluations() {
   const router = useRouter();
   const [stats, setStats] = useState<EvaluationStats | null>(null);
@@ -62,7 +68,7 @@ export default function Evaluations() {
     if (!token) return;
     const fetchEvaluated = async () => {
       try {
-        const res = await axios.get(`${API_URL}/api/evaluations/my-submissions`, {
+        const res = await axios.get<SubmissionsApiResponse>(`${API_URL}/api/evaluations/my-submissions`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.data.success) {
