@@ -30,6 +30,12 @@ const subscriptionPlanSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
+  evaluationsPerDay: {
+    type: Number,
+    required: false,
+    min: 0,
+    default: 0 // 0 means no daily limit
+  },
   accessToResources: {
     type: Boolean,
     default: false

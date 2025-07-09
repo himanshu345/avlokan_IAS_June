@@ -61,6 +61,20 @@ export default function Dashboard() {
     }
   };
 
+  const handleDownload = async (key: string) => {
+    const token = localStorage.getItem('token');
+    // Use local backend for download API
+    const res = await fetch(`${API_URL}/api/evaluations/download?key=${encodeURIComponent(key)}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (data.success && data.url) {
+      window.open(data.url, '_blank');
+    } else {
+      alert('Download failed');
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -157,15 +171,15 @@ export default function Dashboard() {
                       <td className="border px-4 py-2">{sub.subject}</td>
                       <td className="border px-4 py-2">{sub.status}</td>
                       <td className="border px-4 py-2">
-                        {sub.fileAttachments && sub.fileAttachments.length > 0 ? (
-                          <a href={`${API_URL}${sub.fileAttachments[0].path}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline" download>
+                        {sub.fileAttachments && sub.fileAttachments.length > 0 && sub.fileAttachments[0].key ? (
+                          <a href="#" onClick={() => handleDownload(sub.fileAttachments[0].key)} className="text-indigo-600 underline">
                             Download
                           </a>
                         ) : 'N/A'}
                       </td>
                       <td className="border px-4 py-2">
-                        {sub.evaluation?.evaluatedPdf?.path ? (
-                          <a href={`${API_URL}${sub.evaluation.evaluatedPdf.path}`} target="_blank" rel="noopener noreferrer" className="text-green-600 underline">View</a>
+                        {sub.evaluation?.evaluatedPdf?.url ? (
+                          <a href={sub.evaluation.evaluatedPdf.url} target="_blank" rel="noopener noreferrer" className="text-green-600 underline">View</a>
                         ) : 'Not Uploaded'}
                       </td>
                       <td className="border px-4 py-2">
@@ -212,13 +226,18 @@ export default function Dashboard() {
                                 return;
                               }
                             }
-                            await axios.post(
-                              `${API_URL}/api/evaluations/evaluate/${evaluationId}/evaluated-pdf`,
-                              formData,
-                              { headers: { Authorization: `Bearer ${token}` } }
-                            );
-                            alert('Evaluated PDF uploaded!');
-                            fetchSubmissions();
+                            // Only upload evaluated PDF if we have an evaluationId
+                            if (evaluationId) {
+                              await axios.post(
+                                `${API_URL}/api/evaluations/evaluate/${evaluationId}/evaluated-pdf`,
+                                formData,
+                                { headers: { Authorization: `Bearer ${token}` } }
+                              );
+                              alert('Evaluated PDF uploaded!');
+                              fetchSubmissions();
+                            } else {
+                              alert('No evaluation ID found.');
+                            }
                           }}
                         >
                           <input
@@ -262,17 +281,6 @@ export default function Dashboard() {
           </div>
 
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="bg-white shadow rounded-lg p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Resources</h3>
-              <p className="text-gray-600 mb-4">Access study materials and resources</p>
-                <button
-                onClick={() => router.push('/resources')}
-                className="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700"
-              >
-                View Resources
-                  </button>
-            </div>
-
             <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4">Submissions</h3>
               <p className="text-gray-600 mb-4">View your answer submissions</p>

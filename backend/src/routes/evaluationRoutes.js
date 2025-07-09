@@ -8,11 +8,12 @@ const {
   submitEvaluation,
   updateEvaluation,
   getEvaluationStats,
-  getAllSubmissions
+  getAllSubmissions,
+  getSignedDownloadUrl
 } = require('../controllers/evaluationController');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
-const evaluatedPdfUpload = multer({ dest: 'uploads/evaluated-pdfs/' });
+const upload = multer({ storage: multer.memoryStorage() });
+const evaluatedPdfUpload = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
 
@@ -30,5 +31,7 @@ router.post('/evaluate/:id/evaluated-pdf', protect, evaluator, evaluatedPdfUploa
 
 // Admin route to get all submissions
 router.get('/', protect, admin, getAllSubmissions);
+// Add this route for admin download
+router.get('/download', protect, getSignedDownloadUrl);
 
 module.exports = router; 

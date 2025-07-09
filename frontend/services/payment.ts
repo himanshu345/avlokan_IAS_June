@@ -38,7 +38,8 @@ export const initializeRazorpay = () => {
 
 export const createOrder = async (amount: number): Promise<RazorpayOrder> => {
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/payment/create-order`, {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const response = await axios.post(`${API_URL}/api/payment/create-order`, {
       amount,
       currency: 'INR'
     });
@@ -51,8 +52,9 @@ export const createOrder = async (amount: number): Promise<RazorpayOrder> => {
 
 export const verifyPayment = async (paymentData: RazorpayResponse): Promise<VerificationResponse> => {
   try {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/payment/verify-payment`,
+      `${API_URL}/api/payment/verify-payment`,
       paymentData
     );
     return response.data as VerificationResponse;
@@ -62,13 +64,25 @@ export const verifyPayment = async (paymentData: RazorpayResponse): Promise<Veri
   }
 };
 
-export const initiatePayment = async (amount: number, planName: string) => {
+export const activateSubscription = async (userId: string, planId: string, durationInMonths: number = 1) => {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  await axios.post(`${API_URL}/api/payment/activate-subscription`, {
+    userId,
+    planId,
+    durationInMonths,
+  });
+};
+
+export const initiatePayment = async (
+  amount: number,
+  planName: string,
+  userId: string,
+  planId: string,
+  durationInMonths: number = 1
+) => {
   try {
     const res = await initializeRazorpay();
-    if (!res) {
-      throw new Error('Razorpay SDK failed to load');
-    }
-
+    if (!res) throw new Error('Razorpay SDK failed to load');
     const order = await createOrder(amount);
 
     const options = {
@@ -82,14 +96,13 @@ export const initiatePayment = async (amount: number, planName: string) => {
         try {
           const verification = await verifyPayment(response);
           if (verification.verified) {
-            // Payment successful
+            // Payment successful: activate subscription here!
+            await activateSubscription(userId, planId, durationInMonths);
             window.location.href = '/payment-success';
           } else {
-            // Payment failed
             window.location.href = '/payment-failed';
           }
         } catch (error) {
-          console.error('Payment verification failed:', error);
           window.location.href = '/payment-failed';
         }
       },
@@ -103,10 +116,11 @@ export const initiatePayment = async (amount: number, planName: string) => {
       },
     };
 
+    console.log('Razorpay Checkout options:', options);
+
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
   } catch (error) {
-    console.error('Payment initiation failed:', error);
     throw error;
   }
 }; 

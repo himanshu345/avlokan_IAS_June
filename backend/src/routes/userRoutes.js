@@ -18,7 +18,7 @@ const path = require('path');
 const router = express.Router();
 
 const upload = multer({
-  dest: path.join(__dirname, '../../uploads/profile-pictures'),
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {

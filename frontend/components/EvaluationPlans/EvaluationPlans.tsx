@@ -12,6 +12,7 @@ export interface Plan {
   highlight?: string;
   hasEMI?: boolean;
   isPopular?: boolean;
+  id?: string; // Added for new plans
 }
 
 export type PlanCategory = 'gs' | 'optional' | 'combo';
@@ -44,6 +45,7 @@ const comboSubjects = [
 const plans: Plans = {
   gs: [
     {
+      id: '686e8c26c678f9e876818e46', // Basic
       title: 'One Month 2 questions/day',
       highlight: 'Daily Two Answers(DTA) Program',
       features: [
@@ -60,6 +62,7 @@ const plans: Plans = {
       buttonText: 'Subscribe'
     },
     {
+      id: '686e8c26c678f9e876818e47', // DOA
       title: 'One Month 1 questions/day',
       highlight: 'Daily One Answer(DOA) Program',
       features: [
@@ -71,32 +74,12 @@ const plans: Plans = {
         'Evaluation within 24 working hours',
         'Access to Question Bank'
       ],
-      price: 699,
-      originalPrice: 1999,
+      price: 1,
+      originalPrice: 99,
       buttonText: 'Subscribe'
     },
-    // {
-    //   title: 'Mains 2025',
-    //   tag: 'UPSC CSE + State PCS with similar Pattern',
-    //   features: [
-    //     'English/हिंदी Medium',
-    //     'Active Till UPSC CSE Mains 2025',
-    //     'Unlimited GS + Essay Evaluation',
-    //     'No Limit on Daily Submissions',
-    //     'Access to Question Bank',
-    //     'Select question from any source',
-    //     'Full length tests covered',
-    //     'Evaluation within 24 working* hours',
-    //     'Complimentary One-on-One Mentorship Calls',
-    //     'Free – Precision Answer Writing Video Course (PAWC)',
-    //     'Recorded Topic Wise GS Mentored Answer Writing (MAW) Sessions by Rank Holder with Hand Written Model Answers',
-    //     'Access to Previous Year Toppers Copies'
-    //   ],
-    //   price: 8499,
-    //   originalPrice: 10999,
-    //   buttonText: 'Subscribe'
-    // },
     {
+      id: '686e8c26c678f9e876818e49', // Premium
       title: 'Mains 2025',
       highlight: 'Lakshya Mains 2025',
       features: [
@@ -118,47 +101,21 @@ const plans: Plans = {
     }
   ],
   optional: {
-    SOCIOLOGY: [
-      // Optional subject plans will be added here
-    ],
-    PSIR: [
-      // Optional subject plans will be added here
-    ],
-    GEOGRAPHY: [
-      // Optional subject plans will be added here
-    ],
-    PHILOSOPHY: [
-      // Optional subject plans will be added here
-    ],
-    PUBLIC_ADMINISTRATION: [
-      // Optional subject plans will be added here
-    ],
-    HINDI_LITERATURE: [
-      // Optional subject plans will be added here
-    ],
-    HISTORY: [
-      // Optional subject plans will be added here
-    ],
-    TAMIL_LITERATURE: [
-      // Optional subject plans will be added here
-    ]
+    SOCIOLOGY: [],
+    PSIR: [],
+    GEOGRAPHY: [],
+    PHILOSOPHY: [],
+    PUBLIC_ADMINISTRATION: [],
+    HINDI_LITERATURE: [],
+    HISTORY: [],
+    TAMIL_LITERATURE: []
   },
   combo: {
-    SOCIOLOGY_PSIR: [
-      // Combo plans will be added here
-    ],
-    PSIR_GEOGRAPHY: [
-      // Combo plans will be added here
-    ],
-    SOCIOLOGY_ANTHROPOLOGY: [
-      // Combo plans will be added here
-    ],
-    PHILOSOPHY_HISTORY: [
-      // Combo plans will be added here
-    ],
-    GEOGRAPHY_PUBLIC_ADMINISTRATION: [
-      // Combo plans will be added here
-    ]
+    SOCIOLOGY_PSIR: [],
+    PSIR_GEOGRAPHY: [],
+    SOCIOLOGY_ANTHROPOLOGY: [],
+    PHILOSOPHY_HISTORY: [],
+    GEOGRAPHY_PUBLIC_ADMINISTRATION: []
   }
 };
 
@@ -234,7 +191,19 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
                 </div>
                 <button
                   className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 w-full transition-colors"
-                  onClick={() => initiatePayment(plan.price, plan.title)}
+                  onClick={() => {
+                    if (!user) {
+                      window.location.href = '/login';
+                      return;
+                    }
+                    initiatePayment(
+                      plan.price,
+                      plan.title,
+                      user._id,
+                      plan.id || '',
+                      1 // 1 month duration for all plans here
+                    );
+                  }}
                 >
                   {plan.buttonText}
                 </button>

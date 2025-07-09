@@ -90,7 +90,8 @@ export default function ProfilePage() {
     const formData = new FormData();
     formData.append('profilePicture', file);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile-picture`, {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      const res = await fetch(`${API_URL}/api/users/profile-picture`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData
@@ -123,7 +124,11 @@ export default function ProfilePage() {
         <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center">
           <div className="relative mb-6">
             <img
-              src={profilePic || '/images/default-profile.png'}
+              src={
+                profilePic && profilePic.startsWith('http')
+                  ? profilePic
+                  : '/images/default-profile.png'
+              }
               alt="Profile"
               className="w-32 h-32 rounded-full object-cover border-4 border-indigo-200 shadow"
             />

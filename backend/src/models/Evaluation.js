@@ -84,6 +84,8 @@ const evaluationSchema = new mongoose.Schema({
   evaluatedPdf: {
     filename: String,
     path: String,
+    url: String,      // S3 URL for download
+    key: String,      // S3 object key
     mimetype: String,
     size: Number,
     uploadDate: {

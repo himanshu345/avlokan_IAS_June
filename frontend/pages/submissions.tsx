@@ -16,6 +16,8 @@ interface Submission {
   evaluation?: {
     evaluatedPdf?: {
       path: string;
+      url: string;
+      key?: string; // Added key for download
     };
   };
 }
@@ -178,6 +180,20 @@ export default function Submissions() {
     }
   };
 
+  const handleDownload = async (key: string) => {
+    const token = localStorage.getItem('token');
+    // Use local backend for download API
+    const res = await fetch(`${API_URL}/api/evaluations/download?key=${encodeURIComponent(key)}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (data.success && data.url) {
+      window.open(data.url, '_blank');
+    } else {
+      alert('Download failed');
+    }
+  };
+
   if (loading || profileLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -296,16 +312,24 @@ export default function Submissions() {
                       Submitted on {new Date(submission.submissionDate).toLocaleDateString()}
                     </span>
                     {/* Evaluated PDF link */}
-                    {submission.evaluation?.evaluatedPdf?.path && (
+                    {submission.evaluation && submission.evaluation.evaluatedPdf && submission.evaluation.evaluatedPdf.key ? (
                       <a
-                        href={`${API_URL}${submission.evaluation.evaluatedPdf.path}`}
+                        href="#"
+                        onClick={() => handleDownload(submission.evaluation!.evaluatedPdf!.key!)}
+                        className="text-green-600 underline ml-4"
+                      >
+                        Download Evaluated PDF
+                      </a>
+                    ) : submission.evaluation && submission.evaluation.evaluatedPdf && submission.evaluation.evaluatedPdf.url ? (
+                      <a
+                        href={submission.evaluation.evaluatedPdf.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-green-600 underline ml-4"
                       >
                         View Evaluated PDF
                       </a>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               </div>

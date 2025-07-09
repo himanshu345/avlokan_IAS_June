@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import Navbar from '../components/Navbar/Navbar';
 
 interface EvaluationStats {
   total: number;
@@ -20,6 +21,7 @@ export default function Evaluations() {
   const [stats, setStats] = useState<EvaluationStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [evaluatedSubmissions, setEvaluatedSubmissions] = useState<any[]>([]);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -53,11 +55,42 @@ export default function Evaluations() {
     };
 
     fetchEvaluationStats();
-  }, [router]);
+  }, [router, API_URL]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    const fetchEvaluated = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/api/evaluations/my-submissions`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.data.success) {
+          setEvaluatedSubmissions(res.data.submissions.filter((s: any) => s.evaluation && s.evaluation.evaluatedPdf && s.evaluation.evaluatedPdf.key));
+        }
+      } catch (err) {
+        // ignore for now
+      }
+    };
+    fetchEvaluated();
+  }, [API_URL]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     router.push('/login');
+  };
+
+  const handleDownload = async (key: string) => {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_URL}/api/evaluations/download?key=${encodeURIComponent(key)}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (data.success && data.url) {
+      window.open(data.url, '_blank');
+    } else {
+      alert('Download failed');
+    }
   };
 
   if (loading) {
@@ -89,53 +122,56 @@ export default function Evaluations() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-900">Evaluations</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="text-gray-700 hover:text-gray-900"
-              >
-                Dashboard
-              </button>
-              <button
-                onClick={handleLogout}
-                className="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 pt-24">
         <div className="px-4 py-6 sm:px-0">
           {/* Stats Overview */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
             <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-2">Total Submissions</h3>
-              <p className="text-3xl font-bold text-indigo-600">{stats?.total || 0}</p>
+              <p className="text-3xl font-bold text-indigo-600">{stats?.totalSubmissions || 0}</p>
             </div>
             <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-2">Pending Evaluations</h3>
-              <p className="text-3xl font-bold text-yellow-600">{stats?.pending || 0}</p>
+              <p className="text-3xl font-bold text-yellow-600">{stats?.pendingSubmissions || 0}</p>
             </div>
             <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-2">Evaluated</h3>
-              <p className="text-3xl font-bold text-green-600">{stats?.evaluated || 0}</p>
+              <p className="text-3xl font-bold text-green-600">{stats?.evaluatedSubmissions || 0}</p>
             </div>
             <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-2">Average Score</h3>
               <p className="text-3xl font-bold text-indigo-600">
-                {stats?.averageScore ? stats.averageScore.toFixed(1) : '0.0'}/10
+                {stats?.averageScore ? stats.averageScore.toFixed(1) : '0.0'}/25
               </p>
             </div>
           </div>
+
+          {evaluatedSubmissions.length > 0 && (
+            <div className="bg-white shadow rounded-lg p-6 mb-8">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Your Evaluated Answers</h2>
+              <ul className="divide-y divide-gray-200">
+                {evaluatedSubmissions.map((sub) => (
+                  <li key={sub._id} className="py-4 flex items-center justify-between">
+                    <div>
+                      <div className="font-medium text-gray-900">{sub.subject}</div>
+                      <div className="text-sm text-gray-500">Submitted on {new Date(sub.submissionDate).toLocaleDateString()}</div>
+                      <div className="text-sm text-indigo-700 font-semibold mt-1">
+                        Obtained marks: {sub.evaluation?.totalScore ?? 'N/A'}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDownload(sub.evaluation.evaluatedPdf.key)}
+                      className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                    >
+                      Download Evaluated PDF
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Performance Chart */}
           <div className="bg-white shadow rounded-lg p-6 mb-8">

@@ -1,7 +1,12 @@
+/*
+// Subscription page temporarily commented out
+// To re-enable, remove the comment block below
+
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
+import { initiatePayment, activateSubscription } from '../services/payment';
 
 const Subscription = () => {
   const router = useRouter();
@@ -50,7 +55,7 @@ const Subscription = () => {
   // Pricing plans data
   const plans = [
     {
-      id: 'basic',
+      id: '686e8c26c678f9e876818e46', // Basic
       name: 'Basic',
       description: 'Essential features for UPSC aspirants starting their preparation journey',
       monthlyPrice: 499,
@@ -66,7 +71,21 @@ const Subscription = () => {
       isPopular: false,
     },
     {
-      id: 'pro',
+      id: '686e8c26c678f9e876818e47', // DOA
+      name: 'Daily One Answer (DOA) Program',
+      description: 'One answer evaluation per day. Perfect for consistent daily practice.',
+      monthlyPrice: 1,
+      annualPrice: 99,
+      features: [
+        '1 answer evaluation per day',
+        'Consistent daily practice',
+        'Access to expert feedback',
+        'Community access',
+      ],
+      isPopular: false,
+    },
+    {
+      id: '686e8c26c678f9e876818e48', // Pro
       name: 'Pro',
       description: 'Comprehensive preparation package with premium features for serious aspirants',
       monthlyPrice: 999,
@@ -84,7 +103,7 @@ const Subscription = () => {
       isPopular: true,
     },
     {
-      id: 'premium',
+      id: '686e8c26c678f9e876818e49', // Premium
       name: 'Premium',
       description: 'Complete preparation system with personalized mentorship for top results',
       monthlyPrice: 1999,
@@ -182,7 +201,20 @@ const Subscription = () => {
                     plan.isPopular 
                       ? 'bg-primary text-white hover:bg-primary-dark' 
                       : 'bg-primary/10 text-primary hover:bg-primary/20'
-                  }`}>
+                  }`} onClick={async () => {
+                    if (!user) {
+                      router.push('/login');
+                      return;
+                    }
+                    // Initiate payment and activate subscription after payment is verified
+                    await initiatePayment(
+                      isAnnual ? plan.annualPrice : plan.monthlyPrice,
+                      plan.name,
+                      user._id,
+                      plan.id,
+                      isAnnual ? 12 : 1
+                    );
+                  }}>
                     Get Started
                   </button>
                   
@@ -338,4 +370,5 @@ const Subscription = () => {
   );
 };
 
-export default Subscription; 
+export default Subscription;
+*/ 

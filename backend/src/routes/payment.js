@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
+const User = require('../models/User');
+const SubscriptionPlan = require('../models/SubscriptionPlan');
+const { protect } = require('../middleware/authMiddleware');
+const { body, validationResult } = require('express-validator');
 
 // Initialize Razorpay
 const razorpay = new Razorpay({
@@ -10,7 +14,14 @@ const razorpay = new Razorpay({
 });
 
 // Create order
-router.post('/create-order', async (req, res) => {
+router.post('/create-order', [
+  body('amount').isInt({ min: 1 }).withMessage('Amount must be a positive integer'),
+  body('currency').optional().isString().isLength({ min: 3, max: 3 }).withMessage('Currency must be a 3-letter code'),
+], async (req, res) => { // Uncomment 'protect' if only logged-in users can create orders
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   try {
     const { amount, currency = 'INR' } = req.body;
     
@@ -19,17 +30,31 @@ router.post('/create-order', async (req, res) => {
       currency,
       receipt: 'receipt_' + Date.now(),
     };
-
+    console.log('Creating Razorpay order with options:', options);
     const order = await razorpay.orders.create(options);
     res.json(order);
   } catch (error) {
     console.error('Error creating order:', error);
-    res.status(500).json({ error: 'Error creating order' });
+    if (error && error.error) {
+      // Razorpay error object
+      console.error('Razorpay error details:', error.error);
+      res.status(500).json({ error: 'Error creating order', details: error.error });
+    } else {
+      res.status(500).json({ error: 'Error creating order', details: error.message || error });
+    }
   }
 });
 
 // Verify payment
-router.post('/verify-payment', async (req, res) => {
+router.post('/verify-payment', protect, [
+  body('razorpay_order_id').isString().notEmpty(),
+  body('razorpay_payment_id').isString().notEmpty(),
+  body('razorpay_signature').isString().notEmpty(),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   try {
     const {
       razorpay_order_id,
@@ -51,6 +76,40 @@ router.post('/verify-payment', async (req, res) => {
   } catch (error) {
     console.error('Error verifying payment:', error);
     res.status(500).json({ error: 'Error verifying payment' });
+  }
+});
+
+// Activate subscription after payment
+router.post('/activate-subscription', protect, [
+  body('userId').isString().notEmpty(),
+  body('planId').isString().notEmpty(),
+  body('durationInMonths').optional().isInt({ min: 1, max: 24 }).withMessage('Duration must be between 1 and 24 months'),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  try {
+    const { userId, planId, durationInMonths } = req.body;
+    const user = await User.findById(userId);
+    const plan = await SubscriptionPlan.findById(planId);
+    if (!user || !plan) {
+      return res.status(404).json({ success: false, message: 'User or plan not found' });
+    }
+    const now = new Date();
+    let expiry = now;
+    if (user.subscriptionExpiry && user.subscriptionExpiry > now) {
+      // Extend current subscription
+      expiry = new Date(user.subscriptionExpiry);
+    }
+    expiry.setMonth(expiry.getMonth() + (durationInMonths || 1));
+    user.subscriptionPlan = plan._id;
+    user.subscriptionExpiry = expiry;
+    await user.save();
+    res.json({ success: true, message: 'Subscription activated', subscriptionExpiry: expiry });
+  } catch (error) {
+    console.error('Error activating subscription:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 

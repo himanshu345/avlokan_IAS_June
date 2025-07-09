@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const AWS = require('aws-sdk');
 
 // Generate JWT
 const generateToken = (id) => {
@@ -7,6 +8,12 @@ const generateToken = (id) => {
     expiresIn: '30d'
   });
 };
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION
+});
 
 /**
  * @desc    Register a new user
@@ -294,11 +301,16 @@ const uploadProfilePicture = async (req, res) => {
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    // Save relative path or URL
-    const profilePicturePath = `/uploads/profile-pictures/${req.file.filename}`;
-    user.profilePicture = profilePicturePath;
+    // Upload image to S3
+    const s3Result = await s3.upload({
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: `profile-pictures/${Date.now()}_${req.file.originalname}`,
+      Body: req.file.buffer,
+      ContentType: req.file.mimetype,
+    }).promise();
+    user.profilePicture = s3Result.Location;
     await user.save();
-    res.json({ success: true, profilePicture: profilePicturePath });
+    res.json({ success: true, profilePicture: s3Result.Location });
   } catch (error) {
     console.error('Error in uploadProfilePicture:', error);
     res.status(500).json({ success: false, message: 'Server error', error: error.message });

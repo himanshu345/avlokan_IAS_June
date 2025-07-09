@@ -1,6 +1,16 @@
 const Answer = require('../models/Answer');
 const Evaluation = require('../models/Evaluation');
 const User = require('../models/User');
+const AWS = require('aws-sdk');
+const multer = require('multer');
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION
+});
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 /**
  * @desc    Submit a new answer for evaluation
@@ -9,9 +19,7 @@ const User = require('../models/User');
  */
 const submitAnswer = async (req, res) => {
   try {
-    const { 
-      subject
-    } = req.body;
+    const { subject } = req.body;
 
     // Validate required fields
     if (!subject) {
@@ -39,19 +47,60 @@ const submitAnswer = async (req, res) => {
         });
       }
     } else {
-      // Existing subscription logic (if any)
-      // You can keep your evaluationsRemaining logic here if needed
+      // Enforce monthly and daily evaluation limits
+      const plan = user.subscriptionPlan;
+      // Monthly limit
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
+      const monthlyUploads = await Answer.countDocuments({
+        user: req.user._id,
+        submissionDate: { $gte: startOfMonth }
+      });
+      if (plan.evaluationsPerMonth && monthlyUploads >= plan.evaluationsPerMonth) {
+        return res.status(400).json({
+          success: false,
+          message: `You have reached your monthly evaluation limit (${plan.evaluationsPerMonth}) for your plan.`
+        });
+      }
+      // Daily limit
+      if (plan.evaluationsPerDay && plan.evaluationsPerDay > 0) {
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+        const dailyUploads = await Answer.countDocuments({
+          user: req.user._id,
+          submissionDate: { $gte: startOfDay }
+        });
+        if (dailyUploads >= plan.evaluationsPerDay) {
+          return res.status(400).json({
+            success: false,
+            message: `You have reached your daily evaluation limit (${plan.evaluationsPerDay}) for your plan.`
+          });
+        }
+      }
     }
 
-    // Handle PDF upload
+    // Upload PDF to S3
     let attachments = [];
-    if (req.file) {
+    try {
+      const s3Result = await s3.upload({
+        Bucket: process.env.AWS_S3_BUCKET,
+        Key: `submitted-answers/${Date.now()}_${req.file.originalname}`,
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype,
+      }).promise();
       attachments.push({
-        filename: req.file.filename,
-        originalname: req.file.originalname,
+        url: s3Result.Location,
+        key: s3Result.Key,
         mimetype: req.file.mimetype,
-        path: req.file.path
+        size: req.file.size,
+        originalname: req.file.originalname,
+        uploadDate: new Date()
       });
+      console.log('S3 upload successful (submitAnswer):', s3Result);
+    } catch (error) {
+      console.error('S3 upload failed (submitAnswer):', error);
+      return res.status(500).json({ success: false, message: 'S3 upload failed', error: error.message });
     }
 
     // Create new answer
@@ -253,6 +302,7 @@ const submitEvaluation = async (req, res) => {
     
     // Validate required fields
     if (!scores || !totalScore || !feedback) {
+      console.log('Missing required fields:', { scores, totalScore, feedback });
       return res.status(400).json({
         success: false,
         message: 'Please provide scores, totalScore, and feedback'
@@ -263,6 +313,7 @@ const submitEvaluation = async (req, res) => {
     const answer = await Answer.findById(req.params.id);
     
     if (!answer) {
+      console.log('Submission not found for ID:', req.params.id);
       return res.status(404).json({
         success: false,
         message: 'Submission not found'
@@ -271,9 +322,10 @@ const submitEvaluation = async (req, res) => {
     
     // Check if answer is already evaluated
     if (answer.status === 'evaluated') {
+      console.log('Answer already evaluated:', answer._id);
       return res.status(400).json({
         success: false,
-        message: 'This submission has already been evaluated'
+        message: 'Submission already evaluated'
       });
     }
     
@@ -364,24 +416,17 @@ const updateEvaluation = async (req, res) => {
 const getEvaluationStats = async (req, res) => {
   try {
     // Count total submissions
-    const totalSubmissions = await Answer.countDocuments({ 
-      user: req.user._id,
-      isDeleted: false
-    });
-    
+    const totalFilter = { user: req.user._id, isDeleted: false };
+    const totalSubmissions = await Answer.countDocuments(totalFilter);
+    console.log('Total submissions filter:', totalFilter, 'count:', totalSubmissions);
     // Count pending submissions
-    const pendingSubmissions = await Answer.countDocuments({ 
-      user: req.user._id,
-      status: 'pending',
-      isDeleted: false
-    });
-    
+    const pendingFilter = { user: req.user._id, status: 'pending', isDeleted: false };
+    const pendingSubmissions = await Answer.countDocuments(pendingFilter);
+    console.log('Pending submissions filter:', pendingFilter, 'count:', pendingSubmissions);
     // Count evaluated submissions
-    const evaluatedSubmissions = await Answer.countDocuments({ 
-      user: req.user._id,
-      status: 'evaluated',
-      isDeleted: false
-    });
+    const evaluatedFilter = { user: req.user._id, status: 'evaluated', isDeleted: false };
+    const evaluatedSubmissions = await Answer.countDocuments(evaluatedFilter);
+    console.log('Evaluated submissions filter:', evaluatedFilter, 'count:', evaluatedSubmissions);
     
     // Get average score
     const evaluations = await Answer.find({ 
@@ -491,18 +536,58 @@ const uploadEvaluatedPdf = async (req, res) => {
     if (!evaluation) {
       return res.status(404).json({ success: false, message: 'Evaluation not found' });
     }
-    evaluation.evaluatedPdf = {
-      filename: req.file.filename,
-      path: `/uploads/evaluated-pdfs/${req.file.filename}`,
-      mimetype: req.file.mimetype,
-      size: req.file.size,
-      uploadDate: new Date()
-    };
-    await evaluation.save();
-    res.json({ success: true, evaluatedPdf: evaluation.evaluatedPdf });
+    // Debug log before upload
+    console.log('Attempting to upload to S3:', {
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: `evaluated-pdfs/${Date.now()}_${req.file.originalname}`,
+      FileSize: req.file.size,
+      User: req.user ? req.user._id : 'unknown'
+    });
+    try {
+      // Upload to S3
+      const s3Result = await s3.upload({
+        Bucket: process.env.AWS_S3_BUCKET,
+        Key: `evaluated-pdfs/${Date.now()}_${req.file.originalname}`,
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype,
+      }).promise();
+      // Debug log after upload
+      console.log('S3 upload successful:', s3Result);
+      evaluation.evaluatedPdf = {
+        url: s3Result.Location,
+        key: s3Result.Key,
+        mimetype: req.file.mimetype,
+        size: req.file.size,
+        uploadDate: new Date()
+      };
+      await evaluation.save();
+      res.json({ success: true, evaluatedPdf: evaluation.evaluatedPdf });
+    } catch (error) {
+      // Debug log on upload failure
+      console.error('S3 upload failed:', error);
+      res.status(500).json({ success: false, message: 'S3 upload failed', error: error.message });
+    }
   } catch (error) {
     console.error('Error in uploadEvaluatedPdf:', error);
     res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+};
+
+// Generate a signed S3 download URL for a given key
+const getSignedDownloadUrl = async (req, res) => {
+  try {
+    const { key } = req.query;
+    if (!key) {
+      return res.status(400).json({ success: false, message: 'No key provided' });
+    }
+    const url = s3.getSignedUrl('getObject', {
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: key,
+      Expires: 60 * 5 // 5 minutes
+    });
+    res.json({ success: true, url });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error generating signed URL', error: error.message });
   }
 };
 
@@ -515,5 +600,6 @@ module.exports = {
   updateEvaluation,
   getEvaluationStats,
   getAllSubmissions,
-  uploadEvaluatedPdf
+  uploadEvaluatedPdf,
+  getSignedDownloadUrl
 }; 
