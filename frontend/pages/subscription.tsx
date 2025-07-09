@@ -4,10 +4,17 @@ import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 import { initiatePayment, activateSubscription } from '../services/payment';
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  // add other properties as needed
+}
+
 const Subscription = () => {
   const router = useRouter();
   const [isAnnual, setIsAnnual] = useState(true);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
