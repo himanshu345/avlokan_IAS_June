@@ -16,9 +16,10 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^7.8.6",
+    "mongoose": "^7.6.3",
     "multer": "^2.0.1",
-    "razorpay": "^2.9.6"
+    "razorpay": "^2.9.6",
+    "aws-sdk": "^2.1481.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
