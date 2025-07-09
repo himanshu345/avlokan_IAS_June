@@ -47,6 +47,7 @@ const answerSchema = new mongoose.Schema({
   },
   fileAttachments: [{
     filename: String,
+    originalname: String,
     path: String,
     url: String,      // S3 URL for download
     key: String,      // S3 object key
