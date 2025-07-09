@@ -1,7 +1,3 @@
-/*
-// Subscription page temporarily commented out
-// To re-enable, remove the comment block below
-
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar/Navbar';
@@ -370,5 +366,4 @@ const Subscription = () => {
   );
 };
 
-export default Subscription;
-*/ 
+export default Subscription; 
