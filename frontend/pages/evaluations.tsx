@@ -4,9 +4,9 @@ import axios from 'axios';
 import Navbar from '../components/Navbar/Navbar';
 
 interface EvaluationStats {
-  total: number;
-  pending: number;
-  evaluated: number;
+  totalSubmissions: number;
+  pendingSubmissions: number;
+  evaluatedSubmissions: number;
   averageScore: number;
 }
 
