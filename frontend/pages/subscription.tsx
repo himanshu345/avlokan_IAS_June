@@ -5,10 +5,11 @@ import Footer from '../components/Footer/Footer';
 import { initiatePayment, activateSubscription } from '../services/payment';
 
 interface User {
-  _id: string;
+  id: string;
+  _id?: string;
   name: string;
   email: string;
-  // add other properties as needed
+  role: string;
 }
 
 const Subscription = () => {
@@ -37,7 +38,7 @@ const Subscription = () => {
         });
         if (res.ok) {
           const data = await res.json();
-          setUser(data.user);
+          setUser({ id: data.user._id, name: data.user.name, email: data.user.email, role: data.user.role });
         } else {
           // If token is invalid, redirect to login
           localStorage.setItem('redirectAfterLogin', '/subscription');
@@ -213,7 +214,7 @@ const Subscription = () => {
                     await initiatePayment(
                       isAnnual ? plan.annualPrice : plan.monthlyPrice,
                       plan.name,
-                      user._id,
+                      user.id,
                       plan.id,
                       isAnnual ? 12 : 1
                     );
