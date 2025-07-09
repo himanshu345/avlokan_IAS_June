@@ -25,7 +25,7 @@ interface Submission {
   fileAttachments: { filename: string; path: string; originalname?: string; key?: string; url?: string }[];
   evaluation?: {
     _id: string;
-    evaluatedPdf?: { path: string };
+    evaluatedPdf?: { path: string; url?: string };
   };
 }
 
