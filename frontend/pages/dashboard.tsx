@@ -22,7 +22,7 @@ interface Submission {
   user: { _id: string; name: string; email: string };
   subject: string;
   status: string;
-  fileAttachments: { filename: string; path: string; originalname?: string }[];
+  fileAttachments: { filename: string; path: string; originalname?: string; key?: string; url?: string }[];
   evaluation?: {
     _id: string;
     evaluatedPdf?: { path: string };
