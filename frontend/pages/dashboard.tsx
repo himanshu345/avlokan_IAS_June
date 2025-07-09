@@ -172,7 +172,7 @@ export default function Dashboard() {
                       <td className="border px-4 py-2">{sub.status}</td>
                       <td className="border px-4 py-2">
                         {sub.fileAttachments && sub.fileAttachments.length > 0 && sub.fileAttachments[0].key ? (
-                          <a href="#" onClick={() => handleDownload(sub.fileAttachments[0].key)} className="text-indigo-600 underline">
+                          <a href="#" onClick={() => handleDownload(sub.fileAttachments[0].key!)} className="text-indigo-600 underline">
                             Download
                           </a>
                         ) : 'N/A'}
