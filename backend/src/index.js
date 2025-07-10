@@ -57,6 +57,13 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to avlokanias API' });
 });
 
+// Print all registered routes for debugging
+app._router.stack.forEach(function(r){
+  if (r.route && r.route.path){
+    console.log(r.route.path)
+  }
+})
+
 // Connect to MongoDB
 const MONGO_URI = process.env.MONGO_URI;
 console.log('Connecting to MongoDB URI:', MONGO_URI);

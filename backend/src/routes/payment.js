@@ -13,6 +13,11 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
+console.log('Loaded payment routes');
+
+// Add a test route for debugging
+router.get('/test', (req, res) => res.send('Payment route is working!'));
+
 // Create order
 router.post('/create-order', [
   body('amount').isInt({ min: 1 }).withMessage('Amount must be a positive integer'),
@@ -25,19 +30,28 @@ router.post('/create-order', [
   try {
     const { amount, currency = 'INR' } = req.body;
     
+    console.log('Received request to create order:', { amount, currency });
+    
     const options = {
       amount: amount * 100, // Razorpay expects amount in paise
       currency,
       receipt: 'receipt_' + Date.now(),
     };
     console.log('Creating Razorpay order with options:', options);
+    console.log('Razorpay key_id:', process.env.RAZORPAY_KEY_ID);
+    console.log('Razorpay key_secret exists:', !!process.env.RAZORPAY_KEY_SECRET);
+    
     const order = await razorpay.orders.create(options);
+    console.log('Razorpay order created successfully:', order);
     res.json(order);
   } catch (error) {
     console.error('Error creating order:', error);
+    console.error('Error stack:', error.stack);
     if (error && error.error) {
       // Razorpay error object
       console.error('Razorpay error details:', error.error);
+      console.error('Razorpay error code:', error.error.code);
+      console.error('Razorpay error description:', error.error.description);
       res.status(500).json({ error: 'Error creating order', details: error.error });
     } else {
       res.status(500).json({ error: 'Error creating order', details: error.message || error });
@@ -85,6 +99,7 @@ router.post('/activate-subscription', protect, [
   body('planId').isString().notEmpty(),
   body('durationInMonths').optional().isInt({ min: 1, max: 24 }).withMessage('Duration must be between 1 and 24 months'),
 ], async (req, res) => {
+  console.log('Hit activate-subscription route');
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });

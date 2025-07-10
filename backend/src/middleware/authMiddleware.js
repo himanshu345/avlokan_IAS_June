@@ -5,6 +5,7 @@ const User = require('../models/User');
  * Middleware to protect routes by verifying JWT token
  */
 const protect = async (req, res, next) => {
+  console.log('Protect middleware called for', req.method, req.originalUrl);
   let token;
 
   // Check if token exists in Authorization header
