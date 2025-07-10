@@ -131,6 +131,9 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
   const [selectedCombo, setSelectedCombo] = useState<string>('SOCIOLOGY + PSIR');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isComboDropdownOpen, setIsComboDropdownOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [userPhone, setUserPhone] = useState('');
+  const [formError, setFormError] = useState('');
 
   return (
     <section className="py-16 bg-gray-50">
@@ -158,6 +161,29 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
           >
             Evaluation Plans
           </button>
+        </div>
+
+        {/* Email and Mobile Inputs */}
+        {formError && (
+          <div className="text-red-600 text-center mb-4">{formError}</div>
+        )}
+        <div className="flex flex-col md:flex-row md:space-x-4 mb-8 justify-center">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            className="border rounded px-4 py-2 mb-4 md:mb-0"
+            value={userEmail}
+            onChange={e => setUserEmail(e.target.value)}
+            required
+          />
+          <input
+            type="tel"
+            placeholder="Enter your mobile number"
+            className="border rounded px-4 py-2"
+            value={userPhone}
+            onChange={e => setUserPhone(e.target.value)}
+            required
+          />
         </div>
 
         {/* Pricing Cards */}
@@ -192,16 +218,34 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
                 <button
                   className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 w-full transition-colors"
                   onClick={() => {
+                    setFormError('');
                     if (!user) {
                       window.location.href = '/login';
                       return;
                     }
+                    if (!userEmail || !userPhone) {
+                      setFormError('Please enter your email and mobile number.');
+                      return;
+                    }
+                    // Basic validation
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    const phoneRegex = /^\d{10}$/;
+                    if (!emailRegex.test(userEmail)) {
+                      setFormError('Please enter a valid email address.');
+                      return;
+                    }
+                    if (!phoneRegex.test(userPhone)) {
+                      setFormError('Please enter a valid 10-digit mobile number.');
+                      return;
+                    }
                     initiatePayment(
-                      plan.price,
+                      10, // 10 INR (backend will multiply by 100 to get 1000 paise)
                       plan.title,
                       user._id,
                       plan.id || '',
-                      1 // 1 month duration for all plans here
+                      1, // 1 month duration for all plans here
+                      userEmail,
+                      userPhone
                     );
                   }}
                 >

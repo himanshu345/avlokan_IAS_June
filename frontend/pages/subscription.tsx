@@ -17,6 +17,9 @@ const Subscription = () => {
   const [isAnnual, setIsAnnual] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [userEmail, setUserEmail] = useState('');
+  const [userPhone, setUserPhone] = useState('');
+  const [formError, setFormError] = useState('');
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
@@ -168,6 +171,28 @@ const Subscription = () => {
             </div>
           </div>
 
+          {formError && (
+            <div className="text-red-600 text-center mb-4">{formError}</div>
+          )}
+          <div className="flex flex-col md:flex-row md:space-x-4 mb-8 justify-center">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="border rounded px-4 py-2 mb-4 md:mb-0"
+              value={userEmail}
+              onChange={e => setUserEmail(e.target.value)}
+              required
+            />
+            <input
+              type="tel"
+              placeholder="Enter your mobile number"
+              className="border rounded px-4 py-2"
+              value={userPhone}
+              onChange={e => setUserPhone(e.target.value)}
+              required
+            />
+          </div>
+
           {/* Pricing Plans */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {plans.map((plan) => (
@@ -206,17 +231,34 @@ const Subscription = () => {
                       ? 'bg-primary text-white hover:bg-primary-dark' 
                       : 'bg-primary/10 text-primary hover:bg-primary/20'
                   }`} onClick={async () => {
+                    setFormError('');
                     if (!user) {
                       router.push('/login');
                       return;
                     }
-                    // Initiate payment and activate subscription after payment is verified
+                    if (!userEmail || !userPhone) {
+                      setFormError('Please enter your email and mobile number.');
+                      return;
+                    }
+                    // Basic validation
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    const phoneRegex = /^\d{10}$/;
+                    if (!emailRegex.test(userEmail)) {
+                      setFormError('Please enter a valid email address.');
+                      return;
+                    }
+                    if (!phoneRegex.test(userPhone)) {
+                      setFormError('Please enter a valid 10-digit mobile number.');
+                      return;
+                    }
                     await initiatePayment(
-                      isAnnual ? plan.annualPrice : plan.monthlyPrice,
+                      10, // 10 INR (backend will multiply by 100 to get 1000 paise)
                       plan.name,
                       user.id,
                       plan.id,
-                      isAnnual ? 12 : 1
+                      isAnnual ? 12 : 1,
+                      userEmail,
+                      userPhone
                     );
                   }}>
                     Get Started

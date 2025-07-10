@@ -53,9 +53,11 @@ export const createOrder = async (amount: number): Promise<RazorpayOrder> => {
 export const verifyPayment = async (paymentData: RazorpayResponse): Promise<VerificationResponse> => {
   try {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     const response = await axios.post(
       `${API_URL}/api/payment/verify-payment`,
-      paymentData
+      paymentData,
+      token ? { headers: { Authorization: `Bearer ${token}` } } : undefined
     );
     return response.data as VerificationResponse;
   } catch (error) {
@@ -66,11 +68,12 @@ export const verifyPayment = async (paymentData: RazorpayResponse): Promise<Veri
 
 export const activateSubscription = async (userId: string, planId: string, durationInMonths: number = 1) => {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  await axios.post(`${API_URL}/api/payment/activate-subscription`, {
-    userId,
-    planId,
-    durationInMonths,
-  });
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  await axios.post(
+    `${API_URL}/api/payment/activate-subscription`,
+    { userId, planId, durationInMonths },
+    token ? { headers: { Authorization: `Bearer ${token}` } } : undefined
+  );
 };
 
 export const initiatePayment = async (
@@ -78,7 +81,9 @@ export const initiatePayment = async (
   planName: string,
   userId: string,
   planId: string,
-  durationInMonths: number = 1
+  durationInMonths: number = 1,
+  userEmail?: string,
+  userPhone?: string
 ) => {
   try {
     const res = await initializeRazorpay();
@@ -108,8 +113,8 @@ export const initiatePayment = async (
       },
       prefill: {
         name: 'User Name',
-        email: 'user@example.com',
-        contact: '9999999999',
+        email: userEmail || 'user@example.com',
+        contact: userPhone || '9999999999',
       },
       theme: {
         color: '#7a4df9',
