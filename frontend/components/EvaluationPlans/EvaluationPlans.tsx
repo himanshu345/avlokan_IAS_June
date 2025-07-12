@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { initiatePayment } from '../../services/payment';
@@ -176,6 +176,18 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
   const [userEmail, setUserEmail] = useState('');
   const [userPhone, setUserPhone] = useState('');
   const [formError, setFormError] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [modalPlan, setModalPlan] = useState<Plan | null>(null);
+  const [modalName, setModalName] = useState('');
+  const [modalPhone, setModalPhone] = useState('');
+  const [modalEmail, setModalEmail] = useState('');
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (showModal && nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
+  }, [showModal]);
 
   return (
     <section className="py-16 bg-gray-50">
@@ -205,28 +217,9 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
           </button>
         </div>
 
-        {/* Email and Mobile Inputs */}
         {formError && (
           <div className="text-red-600 text-center mb-4">{formError}</div>
         )}
-        <div className="flex flex-col md:flex-row md:space-x-4 mb-8 justify-center">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="border rounded px-4 py-2 mb-4 md:mb-0"
-            value={userEmail}
-            onChange={e => setUserEmail(e.target.value)}
-            required
-          />
-          <input
-            type="tel"
-            placeholder="Enter your mobile number"
-            className="border rounded px-4 py-2"
-            value={userPhone}
-            onChange={e => setUserPhone(e.target.value)}
-            required
-          />
-        </div>
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -265,30 +258,11 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
                       window.location.href = '/login';
                       return;
                     }
-                    if (!userEmail || !userPhone) {
-                      setFormError('Please enter your email and mobile number.');
-                      return;
-                    }
-                    // Basic validation
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    const phoneRegex = /^\d{10}$/;
-                    if (!emailRegex.test(userEmail)) {
-                      setFormError('Please enter a valid email address.');
-                      return;
-                    }
-                    if (!phoneRegex.test(userPhone)) {
-                      setFormError('Please enter a valid 10-digit mobile number.');
-                      return;
-                    }
-                    initiatePayment(
-                      plan.price, // Use the plan's price for payment
-                      plan.title,
-                      user._id,
-                      plan.id || '',
-                      1, // 1 month duration for all plans here
-                      userEmail,
-                      userPhone
-                    );
+                    setModalPlan(plan);
+                    setShowModal(true);
+                    setModalName(user.name || '');
+                    setModalPhone('');
+                    setModalEmail(user.email || '');
                   }}
                 >
                   {plan.buttonText}
@@ -307,6 +281,97 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
             </motion.div>
           ))}
         </div>
+        {/* Modal for Name and Mobile Number */}
+        {showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+            <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative">
+              <button
+                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+                onClick={() => setShowModal(false)}
+                aria-label="Close"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <h3 className="text-xl font-semibold mb-4 text-center">Enter Your Details</h3>
+              <form
+                onSubmit={e => {
+                  e.preventDefault();
+                  setFormError('');
+                  // Basic validation
+                  if (!modalName.trim()) {
+                    setFormError('Please enter your name.');
+                    nameInputRef.current?.focus();
+                    return;
+                  }
+                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                  if (!emailRegex.test(modalEmail)) {
+                    setFormError('Please enter a valid email address.');
+                    return;
+                  }
+                  const phoneRegex = /^\d{10}$/;
+                  if (!phoneRegex.test(modalPhone)) {
+                    setFormError('Please enter a valid 10-digit mobile number.');
+                    return;
+                  }
+                  if (modalPlan && user) {
+                    initiatePayment(
+                      modalPlan.price,
+                      modalPlan.title,
+                      user._id,
+                      modalPlan.id || '',
+                      1,
+                      modalEmail,
+                      modalPhone
+                    );
+                    setShowModal(false);
+                  }
+                }}
+              >
+                <div className="mb-4">
+                  <label className="block text-gray-700 mb-1">Email</label>
+                  <input
+                    type="email"
+                    className="border rounded px-4 py-2 w-full"
+                    value={modalEmail}
+                    onChange={e => setModalEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 mb-1">Name</label>
+                  <input
+                    ref={nameInputRef}
+                    type="text"
+                    className="border rounded px-4 py-2 w-full"
+                    value={modalName}
+                    onChange={e => setModalName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 mb-1">Mobile Number</label>
+                  <input
+                    type="tel"
+                    className="border rounded px-4 py-2 w-full"
+                    value={modalPhone}
+                    onChange={e => setModalPhone(e.target.value)}
+                    required
+                    maxLength={10}
+                  />
+                </div>
+                {formError && <div className="text-red-600 text-center mb-2">{formError}</div>}
+                <button
+                  type="submit"
+                  className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 w-full transition-colors"
+                >
+                  Proceed to Pay
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
