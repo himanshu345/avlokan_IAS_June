@@ -197,7 +197,7 @@ export default function ProfilePage() {
           <h3 className="text-xl font-semibold mb-4">Subscription</h3>
           {subscription ? (
             <div>
-              <p className="mb-2"><span className="font-semibold">Plan:</span> {subscription.title || 'N/A'}</p>
+              <p className="mb-2"><span className="font-semibold">Plan:</span> {subscription.title || subscription.name || 'N/A'}</p>
               <p className="mb-2"><span className="font-semibold">Expiry:</span> {user.subscriptionExpiry ? new Date(user.subscriptionExpiry).toLocaleDateString() : 'N/A'}</p>
             </div>
           ) : (

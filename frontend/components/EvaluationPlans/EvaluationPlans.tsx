@@ -57,7 +57,7 @@ const plans: Plans = {
         'Evaluation within 24 working hours',
         'Access to Question Bank'
       ],
-      price: 1499,
+      price: 1,
       originalPrice: 2499,
       buttonText: 'Subscribe'
     },
@@ -74,7 +74,7 @@ const plans: Plans = {
         'Evaluation within 24 working hours',
         'Access to Question Bank'
       ],
-      price: 799,
+      price: 1,
       originalPrice: 1499,
       buttonText: 'Subscribe'
     },
@@ -94,10 +94,52 @@ const plans: Plans = {
         'Complimentary One-on-One Mentorship Calls',
         'Access to Previous Year Toppers Copies'
       ],
-      price: 6999,
+      price: 1,
       originalPrice: 16999,
       buttonText: 'Subscribe',
       hasEMI: true
+    },
+    {
+      id: '686e8c26c678f9e876818e50', // OMEGA
+      title: 'One Month Evaluation with Guided Answer Writing(OMEGA) Program',
+      highlight: 'OMEGA Program',
+      features: [
+        'English',
+        'Live Weekly Mentorship Sessions',
+        'Personalised guidance on structure, content, and presentation',
+        'Strategy to handle different GS papers',
+        'Doubt-solving & feedback discussion',
+        'Active for 30 days',
+        'Total 60 GS Questions + 2 Essays',
+        '1 questions/day, 1 Essay/Week',
+        'Select question from any source',
+        'Evaluation within 24 working hours',
+        'Access to Question Bank'
+      ],
+      price: 1,
+      originalPrice: 1999,
+      buttonText: 'Subscribe'
+    },
+    {
+      id: '686e8c26c678f9e876818e51', // OMEGA 2 Q/day
+      title: 'Daily Answer Writing with Nurturing(DAWN) Mentorship Program',
+      highlight: 'DAWN Program',
+      features: [
+        'English',
+        'Live Weekly Mentorship Sessions',
+        'Personalised guidance on structure, content, and presentation',
+        'Strategy to handle different GS papers',
+        'Doubt-solving & feedback discussion',
+        'Active for 30 days',
+        'Total 120 GS Questions + 4 Essays',
+        '2 questions/day, 1 Essay/Week',
+        'Select question from any source',
+        'Evaluation within 24 working hours',
+        'Access to Question Bank'
+      ],
+      price: 1,
+      originalPrice: 2999,
+      buttonText: 'Subscribe'
     }
   ],
   optional: {
@@ -251,7 +293,7 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
                 >
                   {plan.buttonText}
                 </button>
-                {plan.hasEMI && (
+                {plan.hasEMI && plan.id !== '686e8c26c678f9e876818e49' && (
                   <>
                     <button className="mt-2 bg-white text-purple-600 border border-purple-600 px-6 py-2 rounded-lg hover:bg-purple-50 w-full transition-colors">
                       Pay in EMI

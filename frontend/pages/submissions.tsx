@@ -105,7 +105,7 @@ export default function Submissions() {
     router.push('/login');
   };
 
-  const subjects = ['all', 'geography', 'history', 'polity', 'economics', 'current-affairs'];
+  const subjects = ['all'];
 
   const filteredSubmissions = selectedSubject === 'all'
     ? submissions
