@@ -74,8 +74,8 @@ const plans: Plans = {
         'Evaluation within 24 working hours',
         'Access to Question Bank'
       ],
-      price: 1,
-      originalPrice: 99,
+      price: 799,
+      originalPrice: 1499,
       buttonText: 'Subscribe'
     },
     {
@@ -239,7 +239,7 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
                       return;
                     }
                     initiatePayment(
-                      10, // 10 INR (backend will multiply by 100 to get 1000 paise)
+                      plan.price, // Use the plan's price for payment
                       plan.title,
                       user._id,
                       plan.id || '',
