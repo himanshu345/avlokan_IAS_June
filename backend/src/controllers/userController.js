@@ -114,7 +114,9 @@ const loginUser = async (req, res) => {
  */
 const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select('-password');
+    const user = await User.findById(req.user._id)
+      .select('-password')
+      .populate('subscriptionPlan');
 
     if (user) {
       res.json({

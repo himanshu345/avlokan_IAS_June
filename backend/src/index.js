@@ -7,6 +7,7 @@ const resourceRoutes = require('./routes/resourcesRoutes');
 const evaluationRoutes = require('./routes/evaluationRoutes');
 const authRoutes = require('./routes/auth');
 const paymentRoutes = require('./routes/payment');
+const ordersRoutes = require('./routes/orders');
 const path = require('path');
 const helmet = require('helmet');
 
@@ -51,6 +52,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/evaluations', evaluationRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/orders', ordersRoutes);
 
 // Welcome route
 app.get('/', (req, res) => {

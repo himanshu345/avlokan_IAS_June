@@ -128,4 +128,14 @@ router.post('/activate-subscription', protect, [
   }
 });
 
+// Add a route to get all subscription plans
+router.get('/plans', async (req, res) => {
+  try {
+    const plans = await SubscriptionPlan.find({ isActive: true });
+    res.json(plans);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch plans' });
+  }
+});
+
 module.exports = router; 
