@@ -57,7 +57,7 @@ const plans: Plans = {
         'Evaluation within 24 working hours',
         'Access to Question Bank'
       ],
-      price: 1,
+      price: 1499,
       originalPrice: 2499,
       buttonText: 'Subscribe'
     },
@@ -74,7 +74,7 @@ const plans: Plans = {
         'Evaluation within 24 working hours',
         'Access to Question Bank'
       ],
-      price: 1,
+      price: 799,
       originalPrice: 1499,
       buttonText: 'Subscribe'
     },
@@ -94,7 +94,7 @@ const plans: Plans = {
         'Complimentary One-on-One Mentorship Calls',
         'Access to Previous Year Toppers Copies'
       ],
-      price: 1,
+      price: 4999,
       originalPrice: 16999,
       buttonText: 'Subscribe',
       hasEMI: true
@@ -116,7 +116,7 @@ const plans: Plans = {
         'Evaluation within 24 working hours',
         'Access to Question Bank'
       ],
-      price: 1,
+      price: 1199,
       originalPrice: 1999,
       buttonText: 'Subscribe'
     },
@@ -137,7 +137,7 @@ const plans: Plans = {
         'Evaluation within 24 working hours',
         'Access to Question Bank'
       ],
-      price: 1,
+      price: 1749,
       originalPrice: 2999,
       buttonText: 'Subscribe'
     }
