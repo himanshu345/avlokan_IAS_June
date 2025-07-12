@@ -94,7 +94,7 @@ router.post('/verify-payment', protect, [
 });
 
 // Activate subscription after payment
-router.post('/activate-subscription', [
+router.post('/activate-subscription', protect, [
   body('userId').isString().notEmpty(),
   body('planId').isString().notEmpty(),
   body('durationInMonths').optional().isInt({ min: 1, max: 24 }).withMessage('Duration must be between 1 and 24 months'),
