@@ -157,7 +157,7 @@ const plans = [
       'PYQ-Aligned, High Quality MCQs',
       'Standard 1/3rd Negative Marking',
       'Structure: Subject Mini Tests -> Immediate Subject FLT -> Grand Mocks',
-      'Starts 1st September 2026'
+      'Starts 25th August 2026'
     ],
     evaluationsPerMonth: 0,
     evaluationsPerDay: 0,

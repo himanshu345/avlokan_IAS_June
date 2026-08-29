@@ -144,7 +144,7 @@ const plans: Plans = {
     {
       id: '6a931cc3761454f6ac449b01', // UPPSC Prelims Test Series 2026
       title: 'UPPSC Prelims Test Series 2026',
-      highlight: 'Starts 1st September 2026',
+      highlight: 'Starts 25th August 2026',
       features: [
         'English',
         '63 Total Tests (5,250+ Questions)',
