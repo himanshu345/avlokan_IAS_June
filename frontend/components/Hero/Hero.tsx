@@ -48,24 +48,6 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-8 w-full">
               <div className="relative w-[80vw] max-w-[800px] sm:w-[100%] sm:max-w-[800px] aspect-square">
                 <Image
-                  src="/images/MSP.jpeg"
-                  alt="MSP Illustration"
-                  layout="fill"
-                  objectFit="contain"
-                  priority
-                />
-              </div>
-              <div className="relative w-[80vw] max-w-[8000px] sm:w-[100%] sm:max-w-[800px] aspect-square">
-                <Image
-                  src="/images/PMP.jpeg"
-                  alt="PMP Illustration"
-                  layout="fill"
-                  objectFit="contain"
-                  priority
-                />
-              </div>
-              <div className="relative w-[80vw] max-w-[800px] sm:w-[100%] sm:max-w-[800px] aspect-square">
-                <Image
                   src="/images/uppsc-prelims-2026.jpeg"
                   alt="UPPSC Prelims Test Series 2026"
                   layout="fill"
