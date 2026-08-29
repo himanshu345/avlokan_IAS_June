@@ -80,11 +80,11 @@ const plans: Plans = {
     },
     {
       id: '686e8c26c678f9e876818e49', // Premium
-      title: 'Mains 2025',
-      highlight: 'Lakshya Mains 2025',
+      title: 'Mains 2026',
+      highlight: 'Lakshya Mains 2026',
       features: [
         'English',
-        'Active Till UPSC CSE Mains 2025',
+        'Active Till UPSC CSE Mains 2026',
         'Unlimited GS + Essay Evaluation',
         'No Limit on Daily Submissions',
         'Access to Question Bank',
@@ -243,7 +243,10 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(plans[activeTab as keyof typeof plans] as Plan[]).map((plan: Plan, index: number) => (
+          {(plans[activeTab as keyof typeof plans] as Plan[])
+            .slice()
+            .sort((a: Plan, b: Plan) => a.price - b.price)
+            .map((plan: Plan, index: number) => (
             <motion.div
               key={plan.title}
               initial={{ opacity: 0, y: 20 }}

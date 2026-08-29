@@ -64,6 +64,15 @@ export default function Hero() {
                   priority
                 />
               </div>
+              <div className="relative w-[80vw] max-w-[800px] sm:w-[100%] sm:max-w-[800px] aspect-square">
+                <Image
+                  src="/images/uppsc-prelims-2026.jpeg"
+                  alt="UPPSC Prelims Test Series 2026"
+                  layout="fill"
+                  objectFit="contain"
+                  priority
+                />
+              </div>
             </div>
           </motion.div>
         </div>

@@ -33,7 +33,7 @@ const prelimsData: PrelimsData = {
   "Prelims CA": [
     {
       title: "Prelims 2026 CA Notes",
-      subtitle: "Ensure 40+ Marks in Prelims 2025!",
+      subtitle: "Ensure 40+ Marks in Prelims 2026!",
       price: "₹599",
       oldPrice: "₹1,099",
       likes: 44

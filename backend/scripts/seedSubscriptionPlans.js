@@ -56,13 +56,13 @@ const plans = [
   },
   {
     _id: new mongoose.Types.ObjectId('686e8c26c678f9e876818e49'),
-    name: 'Mains 2025',
-    description: 'Lakshya Mains 2025',
+    name: 'Mains 2026',
+    description: 'Lakshya Mains 2026',
     monthlyPrice: 1,
     annualPrice: 69990,
     features: [
       'English',
-      'Active Till UPSC CSE Mains 2025',
+      'Active Till UPSC CSE Mains 2026',
       'Unlimited GS + Essay Evaluation',
       'No Limit on Daily Submissions',
       'Access to Question Bank',
