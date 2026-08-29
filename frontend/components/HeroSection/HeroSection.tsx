@@ -12,7 +12,7 @@ const HeroSection = () => {
               Personalized Evaluation for UPSC Success
             </h1>
             <p className="text-lg mb-8 text-white/90">
-              ConvertIAS offers professional evaluation of your UPSC Civil Services answers with actionable feedback, personalized insights, and comprehensive resources to enhance your preparation.
+              AvlokanIAS offers professional evaluation of your UPSC Civil Services answers with actionable feedback, personalized insights, and comprehensive resources to enhance your preparation.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link href="/subscription" className="btn bg-white text-primary hover:bg-gray-100">

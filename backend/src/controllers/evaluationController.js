@@ -514,7 +514,7 @@ const getAllSubmissions = async (req, res) => {
       .populate('user', 'name email')
       .populate({
         path: 'evaluation',
-        select: 'totalScore evaluationDate status feedback'
+        select: 'totalScore evaluationDate status feedback evaluatedPdf'
       });
     res.json({ success: true, submissions });
   } catch (error) {

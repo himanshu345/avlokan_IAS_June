@@ -56,7 +56,7 @@ AvlokanIAS is a comprehensive UPSC (Union Public Service Commission) preparation
 ## Technology Stack
 
 ### Frontend
-- **Framework**: Next.js 13 (React 18)
+- **Framework**: Next.js 12 (React 18)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **State Management**: React Hooks + Context
@@ -113,19 +113,18 @@ AvlokanIAS is a comprehensive UPSC (Union Public Service Commission) preparation
 
 #### API Routes
 ```
-/api/users/          - User management
-/api/auth/           - Authentication
-/api/evaluations/    - Answer evaluation
+/api/users/          - User management + authentication (register, login, google-auth)
+/api/evaluations/    - Answer submission and evaluation (includes file upload)
 /api/resources/      - Study materials
-/api/payment/        - Subscription handling
-/api/upload/         - File management
+/api/payment/        - Razorpay orders + subscription activation
+/api/orders/         - User's order history
 ```
 
 #### Controllers
-- **UserController**: User CRUD operations
-- **EvaluationController**: Answer processing
-- **ResourceController**: Content management
-- **PaymentController**: Subscription handling
+- **userController**: User CRUD operations, profile picture upload
+- **evaluationController**: Answer submission, evaluator review, evaluated-PDF handling
+- **resourceController**: Content management
+- Payment and order handling (Razorpay order creation/verification, subscription activation, order history) is implemented directly in the `payment` and `orders` route files rather than dedicated controllers.
 
 #### Middleware
 - **AuthMiddleware**: JWT verification
@@ -135,9 +134,11 @@ AvlokanIAS is a comprehensive UPSC (Union Public Service Commission) preparation
 
 #### Models
 - **User**: User profiles and authentication
-- **Evaluation**: Answer submissions and feedback
+- **Answer**: Answer submissions and file attachments
+- **Evaluation**: Evaluator scores and feedback, linked to an Answer
 - **Resource**: Study materials and content
 - **SubscriptionPlan**: Payment tiers and access
+- **Order**: Razorpay payment/order records
 
 ## Data Models
 
@@ -161,21 +162,55 @@ AvlokanIAS is a comprehensive UPSC (Union Public Service Commission) preparation
 }
 ```
 
+### Answer Model
+A user's submission. Evaluation is a separate linked document (see below).
+```javascript
+{
+  _id: ObjectId,
+  user: ObjectId (ref: User),
+  subject: String,
+  topic: String,
+  questionTitle: String,
+  questionText: String,
+  answerText: String,
+  submissionDate: Date,
+  status: String (enum: ['pending', 'in-review', 'evaluated', 'rejected']),
+  evaluation: ObjectId (ref: Evaluation),
+  wordCount: Number,
+  fileAttachments: [{ filename, originalname, path, url, key, mimetype, size, uploadDate }],
+  isDeleted: Boolean,
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
 ### Evaluation Model
 ```javascript
 {
   _id: ObjectId,
-  userId: ObjectId (ref: User),
-  question: String,
-  answer: String (file path),
-  subject: String,
-  topic: String,
-  status: String (enum: ['pending', 'evaluated', 'rejected']),
-  score: Number,
-  feedback: String,
-  evaluatorId: ObjectId (ref: User),
-  evaluatedAt: Date,
-  submittedAt: Date
+  answer: ObjectId (ref: Answer),
+  evaluator: ObjectId (ref: User),
+  scores: {
+    understanding: Number (0-10),
+    structure: Number (0-10),
+    relevance: Number (0-10),
+    language: Number (0-10),
+    examples: Number (0-10)
+  },
+  totalScore: Number (0-50),
+  feedback: {
+    general: String,
+    strengths: [String],
+    areasForImprovement: [String],
+    specificComments: [{ text: String, lineNumber: Number }]
+  },
+  evaluationDate: Date,
+  status: String (enum: ['draft', 'completed']),
+  revisionRequested: Boolean,
+  revisionNotes: String,
+  evaluatedPdf: { filename, path, url, key, mimetype, size, uploadDate },
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
@@ -185,15 +220,61 @@ AvlokanIAS is a comprehensive UPSC (Union Public Service Commission) preparation
   _id: ObjectId,
   title: String,
   description: String,
-  type: String (enum: ['note', 'video', 'question']),
+  type: String (enum: ['notes', 'videos', 'pyqs', 'toppers', 'current', 'syllabus']),
   subject: String,
-  topic: String,
+  author: String,
+  authorRole: String,
+  date: Date,
+  thumbnail: String,
+  content: String,
   fileUrl: String,
-  thumbnailUrl: String,
-  accessLevel: String (enum: ['free', 'premium']),
+  videoUrl: String,
+  duration: String,
+  isPremium: Boolean,
+  tags: [String],
+  viewCount: Number,
+  downloadCount: Number,
+  isActive: Boolean,
   createdBy: ObjectId (ref: User),
   createdAt: Date,
   updatedAt: Date
+}
+```
+
+### SubscriptionPlan Model
+```javascript
+{
+  _id: ObjectId,
+  name: String (unique),
+  description: String,
+  monthlyPrice: Number,
+  annualPrice: Number,
+  features: [String],
+  evaluationsPerMonth: Number,
+  evaluationsPerDay: Number,
+  accessToResources: Boolean,
+  accessToVideos: Boolean,
+  personalizedFeedback: Boolean,
+  mentorshipSessions: Number,
+  mockInterviews: Number,
+  isPopular: Boolean,
+  isActive: Boolean,
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Order Model
+```javascript
+{
+  _id: ObjectId,
+  user: ObjectId (ref: User),
+  plan: ObjectId (ref: SubscriptionPlan),
+  amount: Number,
+  paymentId: String,
+  orderId: String,
+  status: String (enum: ['created', 'paid', 'failed']),
+  createdAt: Date
 }
 ```
 
@@ -229,6 +310,19 @@ PUT    /api/resources/:id      - Update resource (admin)
 DELETE /api/resources/:id      - Delete resource (admin)
 ```
 
+#### Payment
+```
+GET    /api/payment/plans                - List active subscription plans
+POST   /api/payment/create-order         - Create a Razorpay order
+POST   /api/payment/verify-payment       - Verify a Razorpay payment signature
+POST   /api/payment/activate-subscription - Activate a user's subscription after payment
+```
+
+#### Orders
+```
+GET    /api/orders/my-orders   - Get the logged-in user's orders
+```
+
 ### Response Format
 ```javascript
 {
@@ -243,9 +337,8 @@ DELETE /api/resources/:id      - Delete resource (admin)
 
 ### Authentication Flow
 1. **Registration**: Email/password or Google OAuth
-2. **Login**: Credential verification + JWT generation
-3. **Token Management**: Refresh token rotation
-4. **Session Handling**: Secure cookie storage
+2. **Login**: Credential verification + JWT generation (30-day expiry, no refresh token)
+3. **Session Handling**: Token is stored in the browser's `localStorage` and sent as a `Bearer` token on each request
 
 ### Authorization Levels
 - **Public**: Landing page, registration, login
@@ -330,7 +423,7 @@ DELETE /api/resources/:id      - Delete resource (admin)
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │    Backend      │    │   Database      │
-│   localhost:3000│    │  localhost:5001 │    │   MongoDB       │
+│   localhost:3000│    │  localhost:5000 │    │   MongoDB       │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 

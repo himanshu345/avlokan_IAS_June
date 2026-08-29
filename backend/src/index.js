@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const resourceRoutes = require('./routes/resourcesRoutes');
 const evaluationRoutes = require('./routes/evaluationRoutes');
-const authRoutes = require('./routes/auth');
 const paymentRoutes = require('./routes/payment');
 const ordersRoutes = require('./routes/orders');
 const path = require('path');
@@ -47,7 +46,6 @@ app.use('/uploads/evaluated-pdfs', express.static(path.join(__dirname, '../uploa
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Routes
-app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/evaluations', evaluationRoutes);

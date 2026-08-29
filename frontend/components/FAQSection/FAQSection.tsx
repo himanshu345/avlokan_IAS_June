@@ -32,7 +32,7 @@ const FAQSection = () => {
     },
     {
       question: 'How can I contact support if I have questions?',
-      answer: 'You can reach our support team through email at support@convertias.com, phone at +91 98765 43210, or through the live chat feature on our website. Premium and Ultimate subscribers receive priority support.',
+      answer: 'You can reach our support team through email at support@avlokanias.com, phone at +91 7838724075 or +91 8130335063, or through the live chat feature on our website. Premium and Ultimate subscribers receive priority support.',
     },
   ];
 

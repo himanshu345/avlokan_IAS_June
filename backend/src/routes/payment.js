@@ -7,11 +7,18 @@ const SubscriptionPlan = require('../models/SubscriptionPlan');
 const { protect } = require('../middleware/authMiddleware');
 const { body, validationResult } = require('express-validator');
 
-// Initialize Razorpay
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET
-});
+// Razorpay client is created lazily (see getRazorpay below) so a missing
+// key only breaks payment endpoints instead of crashing the whole server.
+let razorpay;
+const getRazorpay = () => {
+  if (!razorpay) {
+    razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET
+    });
+  }
+  return razorpay;
+};
 
 console.log('Loaded payment routes');
 
@@ -41,7 +48,7 @@ router.post('/create-order', [
     console.log('Razorpay key_id:', process.env.RAZORPAY_KEY_ID);
     console.log('Razorpay key_secret exists:', !!process.env.RAZORPAY_KEY_SECRET);
     
-    const order = await razorpay.orders.create(options);
+    const order = await getRazorpay().orders.create(options);
     console.log('Razorpay order created successfully:', order);
     res.json(order);
   } catch (error) {

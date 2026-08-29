@@ -9,6 +9,12 @@ const contactMethods = [
     link: 'tel:+917838724075'
   },
   {
+    icon: '📞',
+    label: 'Phone 2',
+    value: '+91 8130335063',
+    link: 'tel:+918130335063'
+  },
+  {
     icon: '📱',
     label: 'Telegram',
     value: '@AvlokanIAS',
@@ -190,7 +196,7 @@ export default function ContactAndFooter() {
           {/* Bottom Bar */}
           <div className="border-t border-gray-200 pt-8">
             <p className="text-center text-gray-600">
-              ©2025 - AvlokanIAS. All rights reserved. For queries: avlokanias.info@gmail.com | +91 7838724075
+              ©2025 - AvlokanIAS. All rights reserved. For queries: avlokanias.info@gmail.com | +91 7838724075 | +91 8130335063
             </p>
           </div>
         </div>

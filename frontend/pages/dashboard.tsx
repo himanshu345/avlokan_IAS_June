@@ -25,7 +25,7 @@ interface Submission {
   fileAttachments: { filename: string; path: string; originalname?: string; key?: string; url?: string }[];
   evaluation?: {
     _id: string;
-    evaluatedPdf?: { path: string; url?: string };
+    evaluatedPdf?: { path: string; url?: string; key?: string };
   };
 }
 
@@ -62,6 +62,9 @@ export default function Dashboard() {
   };
 
   const handleDownload = async (key: string) => {
+    // Open the tab synchronously so it's tied to the click and isn't popup-blocked;
+    // navigate it once the signed URL comes back.
+    const newTab = window.open('', '_blank');
     const token = localStorage.getItem('token');
     // Use local backend for download API
     const res = await fetch(`${API_URL}/api/evaluations/download?key=${encodeURIComponent(key)}`, {
@@ -69,8 +72,9 @@ export default function Dashboard() {
     });
     const data = await res.json();
     if (data.success && data.url) {
-      window.open(data.url, '_blank');
+      if (newTab) newTab.location.href = data.url;
     } else {
+      if (newTab) newTab.close();
       alert('Download failed');
     }
   };
@@ -178,8 +182,8 @@ export default function Dashboard() {
                         ) : 'N/A'}
                       </td>
                       <td className="border px-4 py-2">
-                        {sub.evaluation?.evaluatedPdf?.url ? (
-                          <a href={sub.evaluation.evaluatedPdf.url} target="_blank" rel="noopener noreferrer" className="text-green-600 underline">View</a>
+                        {sub.evaluation?.evaluatedPdf?.key ? (
+                          <a href="#" onClick={() => handleDownload(sub.evaluation!.evaluatedPdf!.key!)} className="text-green-600 underline">View</a>
                         ) : 'Not Uploaded'}
                       </td>
                       <td className="border px-4 py-2">

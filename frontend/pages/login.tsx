@@ -93,7 +93,7 @@ export default function Login() {
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-text">Welcome Back</h1>
             <p className="text-text-muted mt-2">
-              Sign in to access your ConvertIAS account
+              Sign in to access your AvlokanIAS account
             </p>
           </div>
 

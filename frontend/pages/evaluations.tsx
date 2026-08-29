@@ -87,14 +87,18 @@ export default function Evaluations() {
   };
 
   const handleDownload = async (key: string) => {
+    // Open the tab synchronously so it's tied to the click and isn't popup-blocked;
+    // navigate it once the signed URL comes back.
+    const newTab = window.open('', '_blank');
     const token = localStorage.getItem('token');
     const res = await fetch(`${API_URL}/api/evaluations/download?key=${encodeURIComponent(key)}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json();
     if (data.success && data.url) {
-      window.open(data.url, '_blank');
+      if (newTab) newTab.location.href = data.url;
     } else {
+      if (newTab) newTab.close();
       alert('Download failed');
     }
   };

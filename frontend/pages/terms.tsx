@@ -309,7 +309,7 @@ export default function Terms() {
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">SECTION 21 - CONTACT INFORMATION</h2>
           <div className="prose prose-lg">
             <p>
-              Questions about the Terms of Service should be sent to us at info@convertias.com
+              Questions about the Terms of Service should be sent to us at info@avlokanias.com
             </p>
           </div>
         </section>

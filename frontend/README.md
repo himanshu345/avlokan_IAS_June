@@ -29,8 +29,8 @@ A modern web application for IAS exam preparation, inspired by the avlokanias pl
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/convertias-clone.git
-   cd convertias-clone
+   git clone https://github.com/yourusername/avlokanias-clone.git
+   cd avlokanias-clone
    ```
 
 2. Install dependencies:

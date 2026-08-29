@@ -181,6 +181,9 @@ export default function Submissions() {
   };
 
   const handleDownload = async (key: string) => {
+    // Open the tab synchronously so it's tied to the click and isn't popup-blocked;
+    // navigate it once the signed URL comes back.
+    const newTab = window.open('', '_blank');
     const token = localStorage.getItem('token');
     // Use local backend for download API
     const res = await fetch(`${API_URL}/api/evaluations/download?key=${encodeURIComponent(key)}`, {
@@ -188,8 +191,9 @@ export default function Submissions() {
     });
     const data = await res.json();
     if (data.success && data.url) {
-      window.open(data.url, '_blank');
+      if (newTab) newTab.location.href = data.url;
     } else {
+      if (newTab) newTab.close();
       alert('Download failed');
     }
   };

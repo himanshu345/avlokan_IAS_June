@@ -128,7 +128,7 @@ export default function Shipping() {
             <p>Track orders using the provided ID. For inquiries, contact:</p>
             <div className="mt-4 space-y-2">
               <p>📧 Email: info@avlokanias.com</p>
-              <p>📞 Phone: 7838724075</p>
+              <p>📞 Phone: 7838724075, 8130335063</p>
             </div>
           </div>
         </section>
