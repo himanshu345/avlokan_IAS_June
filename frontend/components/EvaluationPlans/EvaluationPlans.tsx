@@ -140,6 +140,26 @@ const plans: Plans = {
       price: 1749,
       originalPrice: 2999,
       buttonText: 'Subscribe'
+    },
+    {
+      id: '6a931cc3761454f6ac449b01', // UPPSC Prelims Test Series 2026
+      title: 'UPPSC Prelims Test Series 2026',
+      highlight: 'Starts 1st September 2026',
+      features: [
+        'English',
+        '63 Total Tests (5,250+ Questions)',
+        '42 Subject-wise Mini Tests (50 Qs each)',
+        '10 Subject Full Length Tests (FLTs)',
+        '6 Current Affairs Tests (5 Mini + 1 Grand FLT)',
+        '5 UP Special Tests',
+        '10 Combined Grand Mock Tests (Full UPPSC Simulation)',
+        'PYQ-Aligned, High Quality MCQs',
+        'Standard 1/3rd Negative Marking',
+        'Structure: Subject Mini Tests → Immediate Subject FLT → Grand Mocks'
+      ],
+      price: 499,
+      originalPrice: 1000,
+      buttonText: 'Subscribe'
     }
   ],
   optional: {

@@ -139,6 +139,35 @@ const plans = [
     mockInterviews: 0,
     isPopular: false,
     isActive: true
+  },
+  {
+    _id: new mongoose.Types.ObjectId('6a931cc3761454f6ac449b01'),
+    name: 'UPPSC Prelims Test Series 2026',
+    description: 'Integrated GS Modular Test Series: 1 Sep 2026 - 20 Nov 2026 (81 Days)',
+    monthlyPrice: 499,
+    annualPrice: 499,
+    features: [
+      'English',
+      '63 Total Tests (5,250+ Questions)',
+      '42 Subject-wise Mini Tests (50 Qs each)',
+      '10 Subject Full Length Tests (FLTs)',
+      '6 Current Affairs Tests (5 Mini + 1 Grand FLT)',
+      '5 UP Special Tests',
+      '10 Combined Grand Mock Tests (Full UPPSC Simulation)',
+      'PYQ-Aligned, High Quality MCQs',
+      'Standard 1/3rd Negative Marking',
+      'Structure: Subject Mini Tests -> Immediate Subject FLT -> Grand Mocks',
+      'Starts 1st September 2026'
+    ],
+    evaluationsPerMonth: 0,
+    evaluationsPerDay: 0,
+    accessToResources: true,
+    accessToVideos: true,
+    personalizedFeedback: false,
+    mentorshipSessions: 0,
+    mockInterviews: 63,
+    isPopular: true,
+    isActive: true
   }
 ];
 
