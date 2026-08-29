@@ -15,8 +15,11 @@ const app = express();
 app.use(helmet());
 
 // CORS configuration for Vercel frontend and local dev
+// ALLOWED_ORIGIN may be a single origin or a comma-separated list
 const allowedOrigins = [
-  process.env.ALLOWED_ORIGIN || 'https://avlokanias.com', // Production or env frontend domain
+  ...(process.env.ALLOWED_ORIGIN
+    ? process.env.ALLOWED_ORIGIN.split(',').map(o => o.trim())
+    : ['https://avlokanias.com']),
   'http://localhost:3000'  // Local development (fallback)
 ];
 app.use(cors({
