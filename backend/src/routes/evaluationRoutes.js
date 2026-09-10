@@ -9,7 +9,8 @@ const {
   updateEvaluation,
   getEvaluationStats,
   getAllSubmissions,
-  getSignedDownloadUrl
+  getSignedDownloadUrl,
+  testEmail
 } = require('../controllers/evaluationController');
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
@@ -31,6 +32,8 @@ router.post('/evaluate/:id/evaluated-pdf', protect, evaluator, evaluatedPdfUploa
 
 // Admin route to get all submissions
 router.get('/', protect, admin, getAllSubmissions);
+// Temporary: verify email sending works in production - remove once confirmed
+router.get('/test-email', protect, admin, testEmail);
 // Add this route for admin download
 router.get('/download', protect, getSignedDownloadUrl);
 

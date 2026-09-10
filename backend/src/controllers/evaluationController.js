@@ -594,6 +594,21 @@ const uploadEvaluatedPdf = async (req, res) => {
   }
 };
 
+// Temporary: sends a test email to the logged-in admin, to verify EMAIL_USER/EMAIL_PASS work in production.
+// Remove this route once the evaluation-email feature is confirmed working.
+const testEmail = async (req, res) => {
+  try {
+    await sendEmail({
+      to: req.user.email,
+      subject: 'Avlokan IAS - test email',
+      html: '<p>This confirms the evaluation-notification email is working.</p>'
+    });
+    res.json({ success: true, message: `Test email sent to ${req.user.email}` });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to send test email', error: error.message });
+  }
+};
+
 // Generate a signed S3 download URL for a given key
 const getSignedDownloadUrl = async (req, res) => {
   try {
@@ -622,5 +637,6 @@ module.exports = {
   getEvaluationStats,
   getAllSubmissions,
   uploadEvaluatedPdf,
-  getSignedDownloadUrl
-}; 
+  getSignedDownloadUrl,
+  testEmail
+};
