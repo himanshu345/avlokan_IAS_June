@@ -168,6 +168,34 @@ const plans = [
     mockInterviews: 63,
     isPopular: true,
     isActive: true
+  },
+  {
+    _id: new mongoose.Types.ObjectId('2e0014df1da911307be058b8'),
+    name: 'Monthly Answer Writing & Evaluation Program',
+    description: 'UPSC / PSC Monthly Answer Writing & Evaluation Program - Starts 6th September',
+    monthlyPrice: 499,
+    annualPrice: 499,
+    features: [
+      'English',
+      'UPSC / PSC',
+      '2 Questions/day, 6 Days a Week',
+      '1 Essay per Month',
+      'Select question from any source',
+      'Evaluation within 24 Hours with Model Answers',
+      'Access to Question Bank',
+      'Exam-Oriented Approach (UPSC/PSC Pattern)',
+      'Personalized Improvement & Mentor Support',
+      'Monthly Progress Report'
+    ],
+    evaluationsPerMonth: 60,
+    evaluationsPerDay: 2,
+    accessToResources: true,
+    accessToVideos: false,
+    personalizedFeedback: true,
+    mentorshipSessions: 1,
+    mockInterviews: 0,
+    isPopular: false,
+    isActive: true
   }
 ];
 

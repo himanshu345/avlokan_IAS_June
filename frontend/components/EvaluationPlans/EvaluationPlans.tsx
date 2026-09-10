@@ -160,6 +160,26 @@ const plans: Plans = {
       price: 499,
       originalPrice: 1000,
       buttonText: 'Subscribe'
+    },
+    {
+      id: '2e0014df1da911307be058b8', // Monthly Answer Writing & Evaluation Program
+      title: 'Monthly Answer Writing & Evaluation Program',
+      highlight: 'Starts 6th September',
+      features: [
+        'English',
+        'UPSC / PSC',
+        '2 Questions/day, 6 Days a Week',
+        '1 Essay per Month',
+        'Select question from any source',
+        'Evaluation within 24 Hours with Model Answers',
+        'Access to Question Bank',
+        'Exam-Oriented Approach (UPSC/PSC Pattern)',
+        'Personalized Improvement & Mentor Support',
+        'Monthly Progress Report'
+      ],
+      price: 499,
+      originalPrice: 2499,
+      buttonText: 'Subscribe'
     }
   ],
   optional: {
