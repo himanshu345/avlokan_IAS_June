@@ -3,6 +3,7 @@ const Evaluation = require('../models/Evaluation');
 const User = require('../models/User');
 const AWS = require('aws-sdk');
 const multer = require('multer');
+const { sendEmail } = require('../utils/sendEmail');
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -562,6 +563,26 @@ const uploadEvaluatedPdf = async (req, res) => {
       };
       await evaluation.save();
       res.json({ success: true, evaluatedPdf: evaluation.evaluatedPdf });
+
+      // Notify the candidate by email; failures here must not affect the upload response.
+      try {
+        const answer = await Answer.findById(evaluation.answer).populate('user', 'name email preferences');
+        const candidate = answer && answer.user;
+        if (candidate && candidate.email && candidate.preferences?.emailNotifications !== false) {
+          await sendEmail({
+            to: candidate.email,
+            subject: `Your ${answer.subject} answer has been evaluated`,
+            html: `
+              <p>Hi ${candidate.name || 'there'},</p>
+              <p>Your answer for <strong>${answer.subject}</strong> has been evaluated and is ready to view.</p>
+              <p><a href="${process.env.FRONTEND_URL || 'https://avlokanias.com'}/evaluations">View your evaluation</a></p>
+              <p>Regards,<br/>Avlokan IAS</p>
+            `
+          });
+        }
+      } catch (emailError) {
+        console.error('Failed to send evaluation email:', emailError);
+      }
     } catch (error) {
       // Debug log on upload failure
       console.error('S3 upload failed:', error);
