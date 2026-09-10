@@ -38,7 +38,7 @@ const plans = [
     features: [
       'English',
       'Active for 30 days',
-      'Total 60 GS Questions + 2 Essays',
+      'Total 30 GS Questions + 2 Essays',
       '1 questions/day, 1 Essay/Week',
       'Select question from any source',
       'Evaluation within 24 working hours',
