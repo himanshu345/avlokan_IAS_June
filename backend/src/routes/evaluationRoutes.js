@@ -30,8 +30,8 @@ router.post('/evaluate/:id', protect, evaluator, submitEvaluation);
 router.put('/evaluate/:id', protect, evaluator, updateEvaluation);
 router.post('/evaluate/:id/evaluated-pdf', protect, evaluator, evaluatedPdfUpload.single('evaluatedPdf'), require('../controllers/evaluationController').uploadEvaluatedPdf);
 
-// Admin route to get all submissions
-router.get('/', protect, admin, getAllSubmissions);
+// Evaluator/Admin route to get all submissions
+router.get('/', protect, evaluator, getAllSubmissions);
 // Temporary: verify email sending works in production - remove once confirmed
 router.get('/test-email', protect, admin, testEmail);
 // Add this route for admin download

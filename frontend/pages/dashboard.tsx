@@ -50,7 +50,7 @@ export default function Dashboard() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const fetchSubmissions = async (userObj = user) => {
-    if (userObj && userObj.role === 'admin') {
+    if (userObj && (userObj.role === 'admin' || userObj.role === 'evaluator')) {
       const token = localStorage.getItem('token');
       const res = await axios.get<SubmissionsApiResponse>(`${API_URL}/api/evaluations`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -96,7 +96,7 @@ export default function Dashboard() {
 
         if (res.data.success) {
           setUser(res.data.user);
-          if (res.data.user.role === 'admin') {
+          if (res.data.user.role === 'admin' || res.data.user.role === 'evaluator') {
             setIsAdmin(true);
             fetchSubmissions(res.data.user);
           }
