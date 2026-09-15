@@ -118,6 +118,11 @@ export default function Navbar({ user }: NavbarProps) {
                 <Link href="/dashboard">
                   <div className="text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">Dashboard</div>
                 </Link>
+                {user?.role === 'admin' && (
+                  <Link href="/admin-users">
+                    <div className="text-gray-700 hover:text-indigo-700 hover:underline underline-offset-8 decoration-2 transition-all duration-200">Manage Users</div>
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -204,6 +209,11 @@ export default function Navbar({ user }: NavbarProps) {
               <Link href="/dashboard" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
                 Dashboard
               </Link>
+              {user?.role === 'admin' && (
+                <Link href="/admin-users" className="block w-full px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200">
+                  Manage Users
+                </Link>
+              )}
               {!user && (
                 <>
                   <Link href="/login" className="block w-full text-center px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:from-indigo-700 hover:to-purple-700 hover:shadow-xl transition-all duration-300">
