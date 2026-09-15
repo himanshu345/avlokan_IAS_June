@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Backend API for avlokanias - UPSC preparation platform",
   "main": "src/index.js",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
