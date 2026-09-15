@@ -22,7 +22,8 @@ const s3 = new AWS.S3({
  */
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, password } = req.body;
+    const email = (req.body.email || '').toLowerCase().trim();
 
     // Check if user exists
     const userExists = await User.findOne({ email });
@@ -75,7 +76,8 @@ const registerUser = async (req, res) => {
  */
 const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { password } = req.body;
+    const email = (req.body.email || '').toLowerCase().trim();
 
     // Check for user email
     const user = await User.findOne({ email });
