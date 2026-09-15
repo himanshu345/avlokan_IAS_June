@@ -1,7 +1,9 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const AWS = require('aws-sdk');
+const crypto = require('crypto');
 const { verifyFirebaseIdToken } = require('../utils/firebaseAdmin');
+const { sendEmail } = require('../utils/sendEmail');
 
 // Generate JWT
 const generateToken = (id) => {
@@ -293,6 +295,103 @@ const changePassword = async (req, res) => {
 };
 
 /**
+ * @desc    Request a password reset link by email
+ * @route   POST /api/users/forgot-password
+ * @access  Public
+ */
+const forgotPassword = async (req, res) => {
+  try {
+    const email = (req.body.email || '').toLowerCase().trim();
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Please provide your email address' });
+    }
+
+    // Always respond the same way, whether or not the account exists, so this
+    // endpoint can't be used to check which emails are registered.
+    const genericResponse = {
+      success: true,
+      message: "If an account exists for that email, we've sent a password reset link."
+    };
+
+    const user = await User.findOne({ email });
+    if (!user || !user.password) {
+      // No account, or an account that only signs in via Google/phone (nothing to reset).
+      return res.json(genericResponse);
+    }
+
+    const rawToken = crypto.randomBytes(32).toString('hex');
+    user.resetPasswordToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+    user.resetPasswordExpire = Date.now() + 60 * 60 * 1000; // 1 hour
+    await user.save();
+
+    const resetUrl = `${process.env.FRONTEND_URL || 'https://avlokanias.com'}/reset-password?token=${rawToken}`;
+
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: 'Reset your Avlokan IAS password',
+        html: `
+          <p>Hi ${user.name || 'there'},</p>
+          <p>We received a request to reset your password. This link is valid for 1 hour:</p>
+          <p><a href="${resetUrl}">Reset your password</a></p>
+          <p>If you didn't request this, you can safely ignore this email.</p>
+          <p>Regards,<br/>Avlokan IAS</p>
+        `
+      });
+    } catch (emailError) {
+      console.error('Failed to send password reset email:', emailError);
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save();
+      return res.status(500).json({ success: false, message: 'Failed to send reset email. Please try again later.' });
+    }
+
+    res.json(genericResponse);
+  } catch (error) {
+    console.error('Error in forgotPassword:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+};
+
+/**
+ * @desc    Reset password using a token from the forgot-password email
+ * @route   POST /api/users/reset-password
+ * @access  Public
+ */
+const resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Missing token or new password' });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 6 characters long' });
+    }
+
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'This reset link is invalid or has expired' });
+    }
+
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Error in resetPassword:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+};
+
+/**
  * @desc    Get all users
  * @route   GET /api/users
  * @access  Private/Admin
@@ -429,6 +528,8 @@ module.exports = {
   getUserProfile,
   updateUserProfile,
   changePassword,
+  forgotPassword,
+  resetPassword,
   phoneAuth,
   getUsers,
   deleteUser,
