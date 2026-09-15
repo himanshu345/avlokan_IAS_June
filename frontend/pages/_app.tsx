@@ -36,7 +36,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <div className="relative aspect-square w-full overflow-hidden rounded-xl shadow-2xl">
               <Image
                 src="/images/uppsc-prelims-2026.jpeg"
-                alt="UPPSC Prelims Test Series 2026"
+                alt="UPPSC Test Series 2026"
                 layout="fill"
                 objectFit="contain"
                 priority

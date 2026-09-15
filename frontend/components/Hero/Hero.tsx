@@ -49,7 +49,7 @@ export default function Hero() {
               <div className="relative w-[80vw] max-w-[800px] sm:w-[100%] sm:max-w-[800px] aspect-square">
                 <Image
                   src="/images/uppsc-prelims-2026.jpeg"
-                  alt="UPPSC Prelims Test Series 2026"
+                  alt="UPPSC Test Series 2026"
                   layout="fill"
                   objectFit="contain"
                   priority
