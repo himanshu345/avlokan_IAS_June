@@ -27,6 +27,7 @@ export default function Login() {
 
   // Phone login state
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneName, setPhoneName] = useState('');
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [phoneLoading, setPhoneLoading] = useState(false);
@@ -35,6 +36,24 @@ export default function Login() {
   const confirmationResultRef = useRef<ConfirmationResult | null>(null);
 
   const { email, password } = formData;
+
+  const getFriendlyPhoneError = (err: any): string => {
+    const code = err?.code || '';
+    switch (code) {
+      case 'auth/code-expired':
+        return 'This code has expired. Tap "Resend OTP" to get a new one.';
+      case 'auth/invalid-verification-code':
+        return 'Incorrect code. Please check and try again.';
+      case 'auth/too-many-requests':
+        return 'Too many attempts. Please wait a few minutes before trying again.';
+      case 'auth/invalid-phone-number':
+        return 'Enter a valid 10-digit mobile number.';
+      case 'auth/quota-exceeded':
+        return 'SMS limit reached for now. Please try again in a while.';
+      default:
+        return err?.response?.data?.message || err?.message || 'Something went wrong. Please try again.';
+    }
+  };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -71,8 +90,9 @@ export default function Login() {
       const result = await signInWithPhoneNumber(auth, fullPhone, recaptchaVerifierRef.current);
       confirmationResultRef.current = result;
       setOtpSent(true);
+      setOtp('');
     } catch (err: any) {
-      setPhoneError(err.message || 'Failed to send OTP. Please try again.');
+      setPhoneError(getFriendlyPhoneError(err));
     } finally {
       setPhoneLoading(false);
     }
@@ -94,13 +114,14 @@ export default function Login() {
       const result = await confirmationResultRef.current.confirm(otp);
       const idToken = await result.user.getIdToken();
       const res = await axios.post<LoginResponse>(`${process.env.NEXT_PUBLIC_API_URL}/api/users/phone-auth`, {
-        idToken
+        idToken,
+        name: phoneName.trim() || undefined
       });
       if (res.data.success) {
         finishLogin(res.data.token);
       }
     } catch (err: any) {
-      setPhoneError(err.response?.data?.message || err.message || 'Invalid or expired OTP');
+      setPhoneError(getFriendlyPhoneError(err));
     } finally {
       setPhoneLoading(false);
     }
@@ -272,22 +293,38 @@ export default function Login() {
               </div>
 
               {otpSent && (
-                <div>
-                  <label htmlFor="otp" className="block text-sm font-medium text-text mb-1">
-                    Verification Code
-                  </label>
-                  <input
-                    id="otp"
-                    type="text"
-                    inputMode="numeric"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="6-digit code"
-                    required
-                  />
-                  <p className="text-xs text-text-muted mt-1">Sent to +91{phoneNumber}</p>
-                </div>
+                <>
+                  <div>
+                    <label htmlFor="otp" className="block text-sm font-medium text-text mb-1">
+                      Verification Code
+                    </label>
+                    <input
+                      id="otp"
+                      type="text"
+                      inputMode="numeric"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="6-digit code"
+                      required
+                    />
+                    <p className="text-xs text-text-muted mt-1">Sent to +91{phoneNumber}</p>
+                  </div>
+                  <div>
+                    <label htmlFor="phoneName" className="block text-sm font-medium text-text mb-1">
+                      Full Name
+                    </label>
+                    <input
+                      id="phoneName"
+                      type="text"
+                      value={phoneName}
+                      onChange={(e) => setPhoneName(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="Your full name"
+                    />
+                    <p className="text-xs text-text-muted mt-1">Only needed the first time you sign in</p>
+                  </div>
+                </>
               )}
 
               <div>
@@ -313,13 +350,23 @@ export default function Login() {
               </div>
 
               {otpSent && (
-                <button
-                  type="button"
-                  onClick={() => { setOtpSent(false); setOtp(''); confirmationResultRef.current = null; }}
-                  className="text-sm text-primary hover:underline"
-                >
-                  Change number
-                </button>
+                <div className="flex justify-between text-sm">
+                  <button
+                    type="button"
+                    onClick={() => { setOtpSent(false); setOtp(''); confirmationResultRef.current = null; }}
+                    className="text-primary hover:underline"
+                  >
+                    Change number
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={phoneLoading}
+                    className="text-primary hover:underline"
+                  >
+                    Resend OTP
+                  </button>
+                </div>
               )}
 
               <div id="recaptcha-container" />
