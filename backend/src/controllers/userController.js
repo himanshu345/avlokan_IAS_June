@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const AWS = require('aws-sdk');
-const { getFirebaseAdmin } = require('../utils/firebaseAdmin');
+const { verifyFirebaseIdToken } = require('../utils/firebaseAdmin');
 
 // Generate JWT
 const generateToken = (id) => {
@@ -125,7 +125,7 @@ const phoneAuth = async (req, res) => {
 
     let decoded;
     try {
-      decoded = await getFirebaseAdmin().auth().verifyIdToken(idToken);
+      decoded = await verifyFirebaseIdToken(idToken);
     } catch (verifyErr) {
       return res.status(401).json({ success: false, message: 'Invalid or expired phone verification' });
     }

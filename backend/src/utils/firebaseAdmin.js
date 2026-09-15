@@ -1,18 +1,21 @@
-const admin = require('firebase-admin');
+const { initializeApp, cert, getApps, getApp } = require('firebase-admin/app');
+const { getAuth } = require('firebase-admin/auth');
 
-let app = null;
-
-function getFirebaseAdmin() {
-  if (!app) {
-    app = admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: (process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n')
-      })
-    });
+function getFirebaseApp() {
+  if (getApps().length) {
+    return getApp();
   }
-  return admin;
+  return initializeApp({
+    credential: cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: (process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n')
+    })
+  });
 }
 
-module.exports = { getFirebaseAdmin };
+function verifyFirebaseIdToken(idToken) {
+  return getAuth(getFirebaseApp()).verifyIdToken(idToken);
+}
+
+module.exports = { verifyFirebaseIdToken };
