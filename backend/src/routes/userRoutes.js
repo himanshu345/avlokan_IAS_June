@@ -9,7 +9,8 @@ const {
   deleteUser,
   updateUserRole,
   uploadProfilePicture,
-  changePassword
+  changePassword,
+  phoneAuth
 } = require('../controllers/userController');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
@@ -33,6 +34,9 @@ const upload = multer({
 // Public routes
 router.post('/register', registerUser);
 router.post('/login', loginUser);
+
+// Phone Auth endpoint - verifies a Firebase phone-auth ID token, then logs in/registers
+router.post('/phone-auth', phoneAuth);
 
 // Google Auth endpoint (implementation)
 router.post('/google-auth', async (req, res) => {

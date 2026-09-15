@@ -8,17 +8,25 @@ const UserSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: function() {
+      return !this.googleId && !this.phone; // Email is optional for Google/phone auth accounts
+    },
     unique: true,
+    sparse: true,
     lowercase: true
   },
   password: {
     type: String,
     required: function() {
-      return !this.googleId; // Password is required only if not using Google auth
+      return !this.googleId && !this.phone; // Password is required only for email/password auth
     }
   },
   googleId: {
+    type: String,
+    sparse: true,
+    unique: true
+  },
+  phone: {
     type: String,
     sparse: true,
     unique: true

@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const AWS = require('aws-sdk');
+const { getFirebaseAdmin } = require('../utils/firebaseAdmin');
 
 // Generate JWT
 const generateToken = (id) => {
@@ -106,6 +107,59 @@ const loginUser = async (req, res) => {
       message: 'Server error',
       error: error.message
     });
+  }
+};
+
+/**
+ * @desc    Login or register a user via a verified Firebase phone-auth ID token
+ * @route   POST /api/users/phone-auth
+ * @access  Public
+ */
+const phoneAuth = async (req, res) => {
+  try {
+    const { idToken, name } = req.body;
+
+    if (!idToken) {
+      return res.status(400).json({ success: false, message: 'Missing idToken' });
+    }
+
+    let decoded;
+    try {
+      decoded = await getFirebaseAdmin().auth().verifyIdToken(idToken);
+    } catch (verifyErr) {
+      return res.status(401).json({ success: false, message: 'Invalid or expired phone verification' });
+    }
+
+    const phone = decoded.phone_number;
+    if (!phone) {
+      return res.status(400).json({ success: false, message: 'No verified phone number on this token' });
+    }
+
+    let user = await User.findOne({ phone });
+    if (!user) {
+      user = await User.create({
+        name: name || phone,
+        phone
+      });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+
+    res.json({
+      success: true,
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        profilePicture: user.profilePicture
+      }
+    });
+  } catch (err) {
+    console.error('Phone auth failed:', err.message);
+    res.status(500).json({ success: false, message: 'Phone authentication failed', error: err.message });
   }
 };
 
@@ -375,6 +429,7 @@ module.exports = {
   getUserProfile,
   updateUserProfile,
   changePassword,
+  phoneAuth,
   getUsers,
   deleteUser,
   updateUserRole,
