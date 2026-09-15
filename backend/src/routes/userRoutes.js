@@ -8,7 +8,8 @@ const {
   getUsers,
   deleteUser,
   updateUserRole,
-  uploadProfilePicture
+  uploadProfilePicture,
+  changePassword
 } = require('../controllers/userController');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
@@ -92,6 +93,7 @@ router.post('/google-auth', async (req, res) => {
 // Protected routes
 router.get('/profile', protect, getUserProfile);
 router.put('/profile', protect, updateUserProfile);
+router.put('/change-password', protect, changePassword);
 router.post('/profile-picture', protect, upload.single('profilePicture'), uploadProfilePicture);
 
 // Admin routes

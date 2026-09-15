@@ -12,6 +12,11 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [subscription, setSubscription] = useState<any>(null);
   const [orders, setOrders] = useState<any[]>([]);
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
+  const [changingPassword, setChangingPassword] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -79,6 +84,59 @@ export default function ProfilePage() {
       }
     } catch (err) {} finally {
       setLoading(false);
+    }
+  };
+
+  const handlePasswordFieldChange = (e: any) => {
+    setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
+  };
+
+  const handleChangePassword = async () => {
+    setPasswordError('');
+    setPasswordSuccess('');
+
+    if (!passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
+      setPasswordError('Please fill in all fields');
+      return;
+    }
+    if (passwordForm.newPassword.length < 6) {
+      setPasswordError('New password must be at least 6 characters long');
+      return;
+    }
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordError('New password and confirm password do not match');
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/change-password`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setPasswordSuccess('Password updated successfully');
+        setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        setTimeout(() => {
+          setShowPasswordForm(false);
+          setPasswordSuccess('');
+        }, 1500);
+      } else {
+        setPasswordError(data.message || 'Failed to update password');
+      }
+    } catch (err) {
+      setPasswordError('Failed to update password');
+    } finally {
+      setChangingPassword(false);
     }
   };
 
@@ -191,6 +249,72 @@ export default function ProfilePage() {
               </>
             )}
           </div>
+        </div>
+        {/* Change Password Section */}
+        <div className="bg-white rounded-xl shadow-lg p-8 mt-8">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-semibold">Password</h3>
+            {!showPasswordForm && (
+              <button
+                onClick={() => setShowPasswordForm(true)}
+                className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+              >
+                Change Password
+              </button>
+            )}
+          </div>
+          {showPasswordForm && (
+            <div className="max-w-md">
+              <input
+                type="password"
+                name="currentPassword"
+                value={passwordForm.currentPassword}
+                onChange={handlePasswordFieldChange}
+                className="border rounded px-3 py-2 w-full mb-3"
+                placeholder="Current password"
+                autoComplete="current-password"
+              />
+              <input
+                type="password"
+                name="newPassword"
+                value={passwordForm.newPassword}
+                onChange={handlePasswordFieldChange}
+                className="border rounded px-3 py-2 w-full mb-3"
+                placeholder="New password"
+                autoComplete="new-password"
+              />
+              <input
+                type="password"
+                name="confirmPassword"
+                value={passwordForm.confirmPassword}
+                onChange={handlePasswordFieldChange}
+                className="border rounded px-3 py-2 w-full mb-3"
+                placeholder="Confirm new password"
+                autoComplete="new-password"
+              />
+              {passwordError && <p className="text-red-600 text-sm mb-3">{passwordError}</p>}
+              {passwordSuccess && <p className="text-green-600 text-sm mb-3">{passwordSuccess}</p>}
+              <div className="flex gap-4">
+                <button
+                  onClick={handleChangePassword}
+                  disabled={changingPassword}
+                  className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 disabled:opacity-50"
+                >
+                  {changingPassword ? 'Updating...' : 'Update Password'}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowPasswordForm(false);
+                    setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                    setPasswordError('');
+                  }}
+                  className="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </div>
         {/* Subscription Section */}
         <div className="bg-white rounded-xl shadow-lg p-8 mt-8">
