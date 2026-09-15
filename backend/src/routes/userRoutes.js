@@ -35,23 +35,38 @@ router.post('/login', loginUser);
 
 // Google Auth endpoint (implementation)
 router.post('/google-auth', async (req, res) => {
-  const { email, name, googleId, picture } = req.body;
+  const { name, googleId, picture } = req.body;
+  const email = (req.body.email || '').toLowerCase().trim();
 
   try {
     // Find or create user
     let user = await User.findOne({ email });
     if (!user) {
-      user = await User.create({
-        name,
-        email,
-        googleId,
-        profilePicture: picture || ''
-      });
+      try {
+        user = await User.create({
+          name: name || email.split('@')[0],
+          email,
+          googleId,
+          profilePicture: picture || ''
+        });
+      } catch (createErr) {
+        // Duplicate email/googleId means a concurrent request (e.g. a double-click) already
+        // created/linked this account - fetch it instead of failing.
+        if (createErr.code === 11000) {
+          user = await User.findOne({ email });
+        } else {
+          throw createErr;
+        }
+      }
     } else if (!user.googleId) {
       // Link Google ID if not already linked
       user.googleId = googleId;
       if (picture && !user.profilePicture) user.profilePicture = picture;
       await user.save();
+    }
+
+    if (!user) {
+      throw new Error('User lookup failed after create/link');
     }
 
     // Generate JWT
@@ -69,6 +84,7 @@ router.post('/google-auth', async (req, res) => {
       }
     });
   } catch (err) {
+    console.error('Google auth failed:', { email, googleId, error: err.message });
     res.status(500).json({ success: false, message: 'Google authentication failed', error: err.message });
   }
 });
