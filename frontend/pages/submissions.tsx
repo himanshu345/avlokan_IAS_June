@@ -28,6 +28,15 @@ interface SubmissionsResponse {
   message?: string;
 }
 
+interface UserProfile {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  subscriptionPlan?: { _id: string; name: string } | null;
+  subscriptionExpiry?: string | null;
+}
+
 export default function Submissions() {
   const router = useRouter();
   const [submissions, setSubmissions] = useState<Submission[]>([]);
@@ -38,7 +47,7 @@ export default function Submissions() {
   const [uploadMessage, setUploadMessage] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [subject, setSubject] = useState('');
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -227,12 +236,20 @@ export default function Submissions() {
       <Head>
         <title>My Evaluations - AvlokanIAS</title>
       </Head>
-      <Navbar user={user} />
+      <Navbar user={user ? { id: user._id, name: user.name, email: user.email, role: user.role } : null} />
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 pt-24">
         <div className="px-4 py-6 sm:px-0">
           {/* PDF Upload Form */}
           <div className="mb-8 bg-white p-6 rounded-lg shadow max-w-2xl mx-auto">
-            <div className="text-center text-indigo-700 font-semibold text-lg mb-2">Get two of your answers evaluated for free</div>
+            <div className="text-center text-indigo-700 font-semibold text-lg mb-2">
+              {user?.subscriptionPlan
+                ? `You're on the ${user.subscriptionPlan.name} plan${
+                    user.subscriptionExpiry
+                      ? ` (active till ${new Date(user.subscriptionExpiry).toLocaleDateString()})`
+                      : ''
+                  }`
+                : 'Get two of your answers evaluated for free'}
+            </div>
             <h2 className="text-lg font-semibold mb-4 text-center">Submit Your Answer as PDF</h2>
             <form onSubmit={handlePDFUpload} className="space-y-4">
               <div className="grid grid-cols-1 gap-4">
