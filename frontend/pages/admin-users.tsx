@@ -16,6 +16,13 @@ interface ManagedUser {
   name: string;
   email: string;
   role: string;
+  subscriptionPlan?: { _id: string; name: string } | null;
+  subscriptionExpiry?: string | null;
+}
+
+interface Plan {
+  _id: string;
+  name: string;
 }
 
 const ROLES = ['user', 'evaluator', 'admin'];
@@ -24,10 +31,13 @@ export default function AdminUsers() {
   const router = useRouter();
   const [me, setMe] = useState<Profile | null>(null);
   const [users, setUsers] = useState<ManagedUser[]>([]);
+  const [plans, setPlans] = useState<Plan[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [assigningId, setAssigningId] = useState<string | null>(null);
+  const [grantSelections, setGrantSelections] = useState<Record<string, { planId: string; duration: string }>>({});
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -57,6 +67,9 @@ export default function AdminUsers() {
         if (usersRes.data.success) {
           setUsers(usersRes.data.users);
         }
+
+        const plansRes = await axios.get<Plan[]>(`${API_URL}/api/payment/plans`);
+        setPlans(plansRes.data);
       } catch (err: any) {
         setError(err.response?.data?.message || 'Failed to load users');
         if (err.response?.status === 401) {
@@ -91,6 +104,46 @@ export default function AdminUsers() {
       alert(err.response?.data?.message || 'Failed to update role');
     } finally {
       setSavingId(null);
+    }
+  };
+
+  const getSelection = (userId: string) =>
+    grantSelections[userId] || { planId: plans[0]?._id || '', duration: '1' };
+
+  const updateSelection = (userId: string, patch: Partial<{ planId: string; duration: string }>) => {
+    setGrantSelections((prev) => ({ ...prev, [userId]: { ...getSelection(userId), ...patch } }));
+  };
+
+  const handleGrantPlan = async (userId: string) => {
+    const { planId, duration } = getSelection(userId);
+    if (!planId) {
+      alert('Please select a plan');
+      return;
+    }
+    const token = localStorage.getItem('token');
+    setAssigningId(userId);
+
+    try {
+      const res = await axios.put<{ success: boolean; message?: string; user?: { subscriptionPlan: { _id: string; name: string }; subscriptionExpiry: string } }>(
+        `${API_URL}/api/users/${userId}/subscription`,
+        { planId, durationInMonths: parseInt(duration, 10) || 1 },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.data.success && res.data.user) {
+        setUsers((prev) =>
+          prev.map((u) =>
+            u._id === userId
+              ? { ...u, subscriptionPlan: res.data.user!.subscriptionPlan, subscriptionExpiry: res.data.user!.subscriptionExpiry }
+              : u
+          )
+        );
+      } else {
+        throw new Error(res.data.message || 'Failed to assign plan');
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to assign plan');
+    } finally {
+      setAssigningId(null);
     }
   };
 
@@ -150,33 +203,83 @@ export default function AdminUsers() {
                   <th className="px-4 py-2">Name</th>
                   <th className="px-4 py-2">Email</th>
                   <th className="px-4 py-2">Role</th>
+                  <th className="px-4 py-2">Current Plan</th>
+                  <th className="px-4 py-2">Grant Plan</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers.map((u) => (
-                  <tr key={u._id} className="border-b last:border-0">
-                    <td className="px-4 py-3 text-gray-900">{u.name}</td>
-                    <td className="px-4 py-3 text-gray-700">{u.email}</td>
-                    <td className="px-4 py-3">
-                      <select
-                        value={u.role}
-                        disabled={savingId === u._id || u._id === me?._id}
-                        onChange={(e) => handleRoleChange(u._id, e.target.value)}
-                        className="border border-gray-300 rounded-lg px-3 py-1.5 capitalize focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
-                        title={u._id === me?._id ? "You can't change your own role" : undefined}
-                      >
-                        {ROLES.map((r) => (
-                          <option key={r} value={r} className="capitalize">
-                            {r}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                ))}
+                {filteredUsers.map((u) => {
+                  const selection = getSelection(u._id);
+                  return (
+                    <tr key={u._id} className="border-b last:border-0">
+                      <td className="px-4 py-3 text-gray-900">{u.name}</td>
+                      <td className="px-4 py-3 text-gray-700">{u.email}</td>
+                      <td className="px-4 py-3">
+                        <select
+                          value={u.role}
+                          disabled={savingId === u._id || u._id === me?._id}
+                          onChange={(e) => handleRoleChange(u._id, e.target.value)}
+                          className="border border-gray-300 rounded-lg px-3 py-1.5 capitalize focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
+                          title={u._id === me?._id ? "You can't change your own role" : undefined}
+                        >
+                          {ROLES.map((r) => (
+                            <option key={r} value={r} className="capitalize">
+                              {r}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                        {u.subscriptionPlan ? (
+                          <>
+                            <div>{u.subscriptionPlan.name}</div>
+                            {u.subscriptionExpiry && (
+                              <div className="text-xs text-gray-400">
+                                till {new Date(u.subscriptionExpiry).toLocaleDateString()}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <span className="text-gray-400">None</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <select
+                            value={selection.planId}
+                            onChange={(e) => updateSelection(u._id, { planId: e.target.value })}
+                            className="border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          >
+                            {plans.map((p) => (
+                              <option key={p._id} value={p._id}>
+                                {p.name}
+                              </option>
+                            ))}
+                          </select>
+                          <input
+                            type="number"
+                            min={1}
+                            max={24}
+                            value={selection.duration}
+                            onChange={(e) => updateSelection(u._id, { duration: e.target.value })}
+                            title="Duration in months"
+                            className="w-14 border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          />
+                          <button
+                            onClick={() => handleGrantPlan(u._id)}
+                            disabled={assigningId === u._id}
+                            className="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50 whitespace-nowrap"
+                          >
+                            {assigningId === u._id ? 'Granting...' : 'Grant'}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
                 {filteredUsers.length === 0 && (
                   <tr>
-                    <td colSpan={3} className="px-4 py-6 text-center text-gray-500">
+                    <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
                       No users found.
                     </td>
                   </tr>

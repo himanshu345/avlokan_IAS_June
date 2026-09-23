@@ -8,6 +8,7 @@ const {
   getUsers,
   deleteUser,
   updateUserRole,
+  assignSubscription,
   uploadProfilePicture,
   changePassword,
   forgotPassword,
@@ -108,5 +109,6 @@ router.post('/profile-picture', protect, upload.single('profilePicture'), upload
 router.get('/', protect, admin, getUsers);
 router.delete('/:id', protect, admin, deleteUser);
 router.put('/:id/role', protect, admin, updateUserRole);
+router.put('/:id/subscription', protect, admin, assignSubscription);
 
 module.exports = router; 

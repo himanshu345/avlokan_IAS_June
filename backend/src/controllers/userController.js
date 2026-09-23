@@ -1,4 +1,6 @@
 const User = require('../models/User');
+const SubscriptionPlan = require('../models/SubscriptionPlan');
+const Order = require('../models/Order');
 const jwt = require('jsonwebtoken');
 const AWS = require('aws-sdk');
 const crypto = require('crypto');
@@ -398,7 +400,7 @@ const resetPassword = async (req, res) => {
  */
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find({}).select('-password');
+    const users = await User.find({}).select('-password').populate('subscriptionPlan', 'name');
     res.json({
       success: true,
       count: users.length,
@@ -493,6 +495,70 @@ const updateUserRole = async (req, res) => {
 };
 
 /**
+ * @desc    Grant/extend a user's subscription plan (e.g. for an offline/manual payment)
+ * @route   PUT /api/users/:id/subscription
+ * @access  Private/Admin
+ */
+const assignSubscription = async (req, res) => {
+  try {
+    const { planId, durationInMonths } = req.body;
+
+    if (!planId) {
+      return res.status(400).json({ success: false, message: 'Please provide a planId' });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const plan = await SubscriptionPlan.findById(planId);
+    if (!plan) {
+      return res.status(404).json({ success: false, message: 'Plan not found' });
+    }
+
+    const now = new Date();
+    let expiry = now;
+    if (user.subscriptionExpiry && user.subscriptionExpiry > now) {
+      // Extend the current subscription rather than overwriting it
+      expiry = new Date(user.subscriptionExpiry);
+    }
+    expiry.setMonth(expiry.getMonth() + (durationInMonths || 1));
+
+    user.subscriptionPlan = plan._id;
+    user.subscriptionExpiry = expiry;
+    await user.save();
+
+    const timestamp = Date.now();
+    await Order.create({
+      user: user._id,
+      plan: plan._id,
+      amount: plan.monthlyPrice,
+      paymentId: `MANUAL-${timestamp}`,
+      orderId: `MANUAL-${timestamp}`,
+      status: 'paid'
+    });
+
+    res.json({
+      success: true,
+      message: 'Subscription assigned',
+      user: {
+        _id: user._id,
+        subscriptionPlan: { _id: plan._id, name: plan.name },
+        subscriptionExpiry: expiry
+      }
+    });
+  } catch (error) {
+    console.error('Error in assignSubscription:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message
+    });
+  }
+};
+
+/**
  * @desc    Upload user profile picture
  * @route   POST /api/users/profile-picture
  * @access  Private
@@ -534,5 +600,6 @@ module.exports = {
   getUsers,
   deleteUser,
   updateUserRole,
+  assignSubscription,
   uploadProfilePicture
 }; 
