@@ -163,21 +163,21 @@ const plans: Plans = {
     {
       id: '2e0014df1da911307be058b8', // Monthly Answer Writing & Evaluation Program
       title: 'Monthly Answer Writing & Evaluation Program',
-      highlight: 'Starts 6th September',
+      highlight: 'All 4 GS Papers',
       features: [
         'English',
-        'UPSC / PSC',
-        '2 Questions/day, 6 Days a Week',
+        'UPSC / PSC - All 4 GS Papers (GS 1-4)',
+        'Total 52 Questions/Month',
+        '6 Days a Week, 2 Questions/day',
         '1 Essay per Month',
-        'Select question from any source',
-        'Evaluation within 24 Hours with Model Answers',
-        'Access to Question Bank',
-        'Exam-Oriented Approach (UPSC/PSC Pattern)',
-        'Personalized Improvement & Mentor Support',
+        'PYQ-Aligned Questions with Model Answers',
+        'Evaluation within 24-48 Hours',
+        'Detailed Feedback on Content, Structure & Presentation',
+        'Mentorship Support & Doubt Solving',
         'Monthly Progress Report'
       ],
-      price: 499,
-      originalPrice: 2499,
+      price: 899,
+      originalPrice: 2299,
       buttonText: 'Subscribe'
     }
   ],
