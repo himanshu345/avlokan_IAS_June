@@ -56,13 +56,13 @@ const plans = [
   },
   {
     _id: new mongoose.Types.ObjectId('686e8c26c678f9e876818e49'),
-    name: 'Mains 2026',
-    description: 'Lakshya Mains 2026',
-    monthlyPrice: 1,
+    name: 'Mains 2027',
+    description: 'Lakshya Mains 2027',
+    monthlyPrice: 24999,
     annualPrice: 69990,
     features: [
       'English',
-      'Active Till UPSC CSE Mains 2026',
+      'Active Till UPSC CSE Mains 2027',
       'Unlimited GS + Essay Evaluation',
       'No Limit on Daily Submissions',
       'Access to Question Bank',
@@ -197,20 +197,18 @@ const plans = [
   },
   {
     _id: new mongoose.Types.ObjectId('6ad38ffd9737bf390934e190'),
-    name: 'WP Pro - Lakshya OCS 2027',
-    description: 'Lakshya OCS 2027 Working Professional Edition - WP Pro: integrated Prelims + Mains mentorship program for working professionals, support till OCS Mains 2027',
+    name: 'UPSC/State PCS Mentorship Program',
+    description: 'Integrated Prelims + Mains mentorship program for working professionals (formerly WP Pro - Lakshya OCS 2027)',
     monthlyPrice: 14999,
     annualPrice: 14999,
     features: [
-      'English / Odia',
+      'English',
       'Daily, Weekly & Monthly Targets (Avlokan Progress Tracker)',
       'Regular Mentorship Sessions (1 One-to-One Call/Week)',
       '36 Tests (20 Prelims + 16 Mains)',
       '1 Mains Answer Checked Every Weekday',
       'Odisha Special Content in Every Subject',
-      'Interview Guidance After Mains',
-      'Support till OCS Mains 2027',
-      'Pay in 3 Installments: Rs.8,000 + Rs.3,500 + Rs.3,500'
+      'Interview Guidance After Mains'
     ],
     evaluationsPerMonth: 22,
     evaluationsPerDay: 1,
@@ -224,19 +222,18 @@ const plans = [
   },
   {
     _id: new mongoose.Types.ObjectId('6ad38ffd9737bf390934e191'),
-    name: 'WP Elite - Lakshya OCS 2027',
-    description: 'Lakshya OCS 2027 Working Professional Edition - WP Elite: everything in WP Pro plus double the mentorship and answer evaluation, support till OCS Mains 2027, only 30 seats',
+    name: 'UPSC/State PCS Elite Mentorship Program',
+    description: 'Everything in the UPSC/State PCS Mentorship Program plus double the mentorship and answer evaluation, only 30 seats (formerly WP Elite - Lakshya OCS 2027)',
     monthlyPrice: 27999,
     annualPrice: 27999,
     features: [
-      'English / Odia',
-      'Everything in WP Pro, plus:',
+      'English',
+      'Everything in the UPSC/State PCS Mentorship Program, plus:',
       'Regular Mentorship Sessions (2 One-to-One Calls/Week)',
       '46 Tests (10 Extra Mock Tests)',
       '2 Mains Answers Checked Every Weekday',
       'Answers Checked Within 24 Hours',
-      'Monthly Personal Plan + Live Copy Review',
-      'Support till OCS Mains 2027'
+      'Monthly Personal Plan + Live Copy Review'
     ],
     evaluationsPerMonth: 44,
     evaluationsPerDay: 2,

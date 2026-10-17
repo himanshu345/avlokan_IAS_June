@@ -82,11 +82,11 @@ const plans: Plans = {
     },
     {
       id: '686e8c26c678f9e876818e49', // Premium
-      title: 'Mains 2026',
-      highlight: 'Lakshya Mains 2026',
+      title: 'Mains 2027',
+      highlight: 'Lakshya Mains 2027',
       features: [
         'English',
-        'Active Till UPSC CSE Mains 2026',
+        'Active Till UPSC CSE Mains 2027',
         'Unlimited GS + Essay Evaluation',
         'No Limit on Daily Submissions',
         'Access to Question Bank',
@@ -96,8 +96,8 @@ const plans: Plans = {
         'Complimentary One-on-One Mentorship Calls',
         'Access to Previous Year Toppers Copies'
       ],
-      price: 4999,
-      originalPrice: 16999,
+      price: 24999,
+      originalPrice: 34999,
       buttonText: 'Subscribe',
       hasEMI: true
     },
@@ -183,19 +183,17 @@ const plans: Plans = {
       buttonText: 'Subscribe'
     },
     {
-      id: '6ad38ffd9737bf390934e190', // WP Pro - Lakshya OCS 2027 (Working Professional Edition)
-      title: 'WP Pro - Lakshya OCS 2027',
+      id: '6ad38ffd9737bf390934e190', // UPSC/State PCS Mentorship Program (formerly WP Pro - Lakshya OCS 2027)
+      title: 'UPSC/State PCS Mentorship Program',
       highlight: 'Recommended',
       features: [
-        'English / Odia',
+        'English',
         'Daily, Weekly & Monthly Targets (Avlokan Progress Tracker)',
         'Regular Mentorship Sessions (1 One-to-One Call/Week)',
         '36 Tests (20 Prelims + 16 Mains)',
         '1 Mains Answer Checked Every Weekday',
         'Odisha Special Content in Every Subject',
-        'Interview Guidance After Mains',
-        'Support till OCS Mains 2027',
-        'Pay in 3 Installments: ₹8,000 + ₹3,500 + ₹3,500'
+        'Interview Guidance After Mains'
       ],
       price: 14999,
       originalPrice: 19999,
@@ -204,18 +202,17 @@ const plans: Plans = {
       buttonText: 'Subscribe'
     },
     {
-      id: '6ad38ffd9737bf390934e191', // WP Elite - Lakshya OCS 2027 (Working Professional Edition)
-      title: 'WP Elite - Lakshya OCS 2027',
+      id: '6ad38ffd9737bf390934e191', // UPSC/State PCS Elite Mentorship Program (formerly WP Elite - Lakshya OCS 2027)
+      title: 'UPSC/State PCS Elite Mentorship Program',
       highlight: 'Only 30 Seats',
       features: [
-        'English / Odia',
-        'Everything in WP Pro, plus:',
+        'English',
+        'Everything in the UPSC/State PCS Mentorship Program, plus:',
         'Regular Mentorship Sessions (2 One-to-One Calls/Week)',
         '46 Tests (10 Extra Mock Tests)',
         '2 Mains Answers Checked Every Weekday',
         'Answers Checked Within 24 Hours',
-        'Monthly Personal Plan + Live Copy Review',
-        'Support till OCS Mains 2027'
+        'Monthly Personal Plan + Live Copy Review'
       ],
       price: 27999,
       originalPrice: 34999,
@@ -262,6 +259,7 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
   const [modalName, setModalName] = useState('');
   const [modalPhone, setModalPhone] = useState('');
   const [modalEmail, setModalEmail] = useState('');
+  const [isInstallmentPayment, setIsInstallmentPayment] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -343,6 +341,7 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
                       return;
                     }
                     setModalPlan(plan);
+                    setIsInstallmentPayment(false);
                     setShowModal(true);
                     setModalName(user.name || '');
                     setModalPhone('');
@@ -351,6 +350,26 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
                 >
                   {plan.buttonText}
                 </button>
+                {plan.payNowAmount && (
+                  <button
+                    className="mt-2 bg-white text-purple-600 border border-purple-600 px-6 py-2 rounded-lg hover:bg-purple-50 w-full transition-colors"
+                    onClick={() => {
+                      setFormError('');
+                      if (!user) {
+                        window.location.href = '/login';
+                        return;
+                      }
+                      setModalPlan(plan);
+                      setIsInstallmentPayment(true);
+                      setShowModal(true);
+                      setModalName(user.name || '');
+                      setModalPhone('');
+                      setModalEmail(user.email || '');
+                    }}
+                  >
+                    Pay in Installments
+                  </button>
+                )}
                 {plan.hasEMI && plan.id !== '686e8c26c678f9e876818e49' && (
                   <>
                     <button className="mt-2 bg-white text-purple-600 border border-purple-600 px-6 py-2 rounded-lg hover:bg-purple-50 w-full transition-colors">
@@ -379,7 +398,7 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
                 </svg>
               </button>
               <h3 className="text-xl font-semibold mb-4 text-center">Enter Your Details</h3>
-              {modalPlan?.payNowAmount && (
+              {isInstallmentPayment && modalPlan?.payNowAmount && (
                 <div className="mb-4 bg-purple-50 border border-purple-200 text-purple-800 text-sm rounded px-4 py-3 text-center">
                   You're paying the 1st installment of ₹{modalPlan.payNowAmount} now. The remaining
                   ₹{modalPlan.price - modalPlan.payNowAmount} will be collected in 2 further installments.
@@ -407,7 +426,7 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
                   }
                   if (modalPlan && user) {
                     initiatePayment(
-                      modalPlan.payNowAmount ?? modalPlan.price,
+                      isInstallmentPayment && modalPlan.payNowAmount ? modalPlan.payNowAmount : modalPlan.price,
                       modalPlan.title,
                       user._id,
                       modalPlan.id || '',
