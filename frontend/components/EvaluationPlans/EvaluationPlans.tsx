@@ -13,6 +13,8 @@ export interface Plan {
   hasEMI?: boolean;
   isPopular?: boolean;
   id?: string; // Added for new plans
+  payNowAmount?: number; // If set, checkout charges this instead of `price` (e.g. a first installment)
+  durationInMonths?: number; // How long the subscription lasts once activated (default 1)
 }
 
 export type PlanCategory = 'gs' | 'optional' | 'combo';
@@ -179,6 +181,46 @@ const plans: Plans = {
       price: 899,
       originalPrice: 2299,
       buttonText: 'Subscribe'
+    },
+    {
+      id: '6ad38ffd9737bf390934e190', // WP Pro - Lakshya OCS 2027 (Working Professional Edition)
+      title: 'WP Pro - Lakshya OCS 2027',
+      highlight: 'Recommended',
+      features: [
+        'English / Odia',
+        'Daily, Weekly & Monthly Targets (Avlokan Progress Tracker)',
+        'Regular Mentorship Sessions (1 One-to-One Call/Week)',
+        '36 Tests (20 Prelims + 16 Mains)',
+        '1 Mains Answer Checked Every Weekday',
+        'Odisha Special Content in Every Subject',
+        'Interview Guidance After Mains',
+        'Support till OCS Mains 2027',
+        'Pay in 3 Installments: ₹8,000 + ₹3,500 + ₹3,500'
+      ],
+      price: 14999,
+      originalPrice: 19999,
+      payNowAmount: 8000,
+      durationInMonths: 13,
+      buttonText: 'Subscribe'
+    },
+    {
+      id: '6ad38ffd9737bf390934e191', // WP Elite - Lakshya OCS 2027 (Working Professional Edition)
+      title: 'WP Elite - Lakshya OCS 2027',
+      highlight: 'Only 30 Seats',
+      features: [
+        'English / Odia',
+        'Everything in WP Pro, plus:',
+        'Regular Mentorship Sessions (2 One-to-One Calls/Week)',
+        '46 Tests (10 Extra Mock Tests)',
+        '2 Mains Answers Checked Every Weekday',
+        'Answers Checked Within 24 Hours',
+        'Monthly Personal Plan + Live Copy Review',
+        'Support till OCS Mains 2027'
+      ],
+      price: 27999,
+      originalPrice: 34999,
+      durationInMonths: 13,
+      buttonText: 'Subscribe'
     }
   ],
   optional: {
@@ -337,6 +379,12 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
                 </svg>
               </button>
               <h3 className="text-xl font-semibold mb-4 text-center">Enter Your Details</h3>
+              {modalPlan?.payNowAmount && (
+                <div className="mb-4 bg-purple-50 border border-purple-200 text-purple-800 text-sm rounded px-4 py-3 text-center">
+                  You're paying the 1st installment of ₹{modalPlan.payNowAmount} now. The remaining
+                  ₹{modalPlan.price - modalPlan.payNowAmount} will be collected in 2 further installments.
+                </div>
+              )}
               <form
                 onSubmit={e => {
                   e.preventDefault();
@@ -359,11 +407,11 @@ export default function EvaluationPlans({ user, showTitleSection = true, showNot
                   }
                   if (modalPlan && user) {
                     initiatePayment(
-                      modalPlan.price,
+                      modalPlan.payNowAmount ?? modalPlan.price,
                       modalPlan.title,
                       user._id,
                       modalPlan.id || '',
-                      1,
+                      modalPlan.durationInMonths ?? 1,
                       modalEmail,
                       modalPhone
                     );
