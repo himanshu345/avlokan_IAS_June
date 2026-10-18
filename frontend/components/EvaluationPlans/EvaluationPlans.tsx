@@ -197,7 +197,6 @@ const plans: Plans = {
       ],
       price: 14999,
       originalPrice: 19999,
-      payNowAmount: 8000,
       durationInMonths: 13,
       buttonText: 'Subscribe'
     },
